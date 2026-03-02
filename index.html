@@ -20,8 +20,10 @@
         .chapter-box { border: 2px solid var(--light-blue); border-radius: 8px; padding: 20px; margin-bottom: 30px; }
         .chapter-title { color: var(--primary); font-size: 1.3em; margin-top: 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;}
         
-        /* 圖片與圖文區塊設計 */
-        .lesson-img { width: 100%; max-height: 350px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        /* 圖片區塊優化 (針對AI概念圖優化比例) */
+        .lesson-img { width: 100%; max-height: 450px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .ai-note { font-size: 0.8em; color: #7f8c8d; text-align: center; margin-top: -10px; margin-bottom: 15px; font-style: italic;}
+        
         .lesson-content { background: var(--lesson-bg); padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px dashed #f1c40f; font-size: 1.1em; line-height: 1.8; }
         .lesson-content h3 { color: #d35400; margin-top: 0; border-bottom: 2px solid #fad7a1; padding-bottom: 5px; }
         .lesson-content ul, .lesson-content ol { padding-left: 20px; margin-bottom: 0; }
@@ -31,14 +33,12 @@
         .life-app { background: #e8f8f5; padding: 15px; border-radius: 8px; border-left: 5px solid #1abc9c; margin-top: 15px; position: relative;}
         .life-app h3 { margin-top: 0; color: #16a085; display: inline-block;}
         
-        /* 測驗區 */
         .question-card { background: #f9f9f9; padding: 15px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #eee; position: relative; }
         .question-title { font-weight: bold; margin-bottom: 10px; font-size: 1.1em; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
         .options label { display: block; padding: 8px; cursor: pointer; border-radius: 4px; transition: background 0.2s; }
         .options label:hover { background: #e2e8f0; }
         input[type="radio"] { margin-right: 10px; }
         
-        /* 按鈕設計 */
         .btn-group { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
         button { background: var(--primary); color: #fff; border: none; padding: 12px 24px; font-size: 16px; border-radius: 5px; cursor: pointer; transition: 0.3s; font-weight: bold; }
         button:hover { filter: brightness(1.1); transform: scale(1.02); }
@@ -97,45 +97,36 @@
 </div>
 
 <script>
-    // 【語音系統優化】：確保在各種瀏覽器下都能抓到聲音
     let synth = window.speechSynthesis;
     let voiceList = [];
     
-    function loadVoices() { 
-        voiceList = synth.getVoices(); 
-    }
-    // 解決 Chrome 語音非同步載入問題
+    function loadVoices() { voiceList = synth.getVoices(); }
     loadVoices();
-    if (speechSynthesis.onvoiceschanged !== undefined) { 
-        speechSynthesis.onvoiceschanged = loadVoices; 
-    }
+    if (speechSynthesis.onvoiceschanged !== undefined) { speechSynthesis.onvoiceschanged = loadVoices; }
 
-    // 將要唸的字串存入全域陣列，避免 HTML onClick 字串格式錯誤
     window.speakData = {};
 
     function speakText(key) {
-        if (!synth) {
-            alert("哎呀，您的瀏覽器似乎不支援語音功能喔！");
-            return;
-        }
+        if (!synth) { alert("哎呀，您的瀏覽器似乎不支援語音功能喔！"); return; }
         
         const text = window.speakData[key];
         if(!text) return;
 
-        synth.cancel(); // 停止上一段語音
+        synth.cancel(); 
         let utterThis = new SpeechSynthesisUtterance(text);
         utterThis.lang = 'zh-TW';
-        utterThis.pitch = 1.3; // 偏高音調(年輕女聲)
-        utterThis.rate = 0.95; // 稍微放慢
         
-        // 尋找中文語音
+        // 【聲調優化】：調整參數使聲調更柔和
+        utterThis.pitch = 1.15; // 稍微降低音調，更自然
+        utterThis.rate = 0.93; // 稍微放慢語速，更清晰、有耐心
+        
         let zhVoice = voiceList.find(v => v.lang.includes('zh-TW') || v.lang.includes('zh'));
         if (zhVoice) utterThis.voice = zhVoice;
         
         synth.speak(utterThis);
     }
 
-    // 【知識庫系統】：加入 imageUrl 配置
+    // 【知識庫系統】：加入 AI 生成圖片概念連結
     const knowledgeBase = {
         "grade3_term2": {
             "unit1": {
@@ -143,7 +134,9 @@
                 "sections": [
                     {
                         "chapterTitle": "【1-1】 蔬菜是從哪裡來的",
-                        "imageUrl": "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=800&q=80",
+                        // AI 圖像生成概念：這張圖是用 descriptive placeholder 替代，概念性地呈現 AI 生成出的蔬菜不同部位解剖圖。
+                        // 提示詞 (概念)：A bright, educational diagram style photograph of various fresh vegetables arranged in a semi-circle on a rustic wooden table. Below each vegetable, there is a distinct icon and illustrative root structure growing into a stylized patch of soil. Clear labels pointing to the roots, stem, leaves, flowers, and fruits. Natural daylight, vibrant colors.
+                        "imageUrl": "concept_vegetable_parts_ai.png",
                         "lessonHTML": `
                             <h3>🥦 蔬菜大解密：我們吃的是哪裡？</h3>
                             <p>植物的身體就像機器人一樣，有不同的零件，每個零件都有特別的功能！我們平常吃的蔬菜，其實是植物身體的不同部位喔：</p>
@@ -162,7 +155,9 @@
                     },
                     {
                         "chapterTitle": "【1-2】 哪些因素會影響蔬菜生長",
-                        "imageUrl": "https://images.unsplash.com/photo-1416879598555-220b8fa0d4c8?auto=format&fit=crop&w=800&q=80",
+                        // AI 圖像生成概念：概念圖呈現小苗在陽光、水氣和養分泥土中的成長魔法包。
+                        // 提示詞 (概念)：A detailed close-up conceptual photograph of a young bean seedling in a simple terracotta pot sitting on a sunny windowsill. There is a gentle, illustrative overlay showing sun rays (labeled '太陽光'), small water droplets and mist (labeled '水/空氣'), and colorful nutrient particles flowing up from rich, dark soil into the roots (labeled '養分'). The overall atmosphere is warm, gentle, and growth-oriented. The window background shows a blurred garden.
+                        "imageUrl": "concept_growth_factors_ai.png",
                         "lessonHTML": `
                             <h3>☀️ 植物的魔法三大法寶</h3>
                             <p>如果你想當一個厲害的小農夫，一定要知道植物長大需要的三個魔法寶物：</p>
@@ -179,7 +174,9 @@
                     },
                     {
                         "chapterTitle": "【1-3】 蔬菜生長會經歷哪些變化",
-                        "imageUrl": "https://images.unsplash.com/photo-1593691509543-c55fb32e7355?auto=format&fit=crop&w=800&q=80",
+                        // AI 圖像生成概念：概念圖呈現植物從種子發芽到結果的時間流逝合成圖，學生可看圖量高度。
+                        // 提示詞 (概念)：A conceptual diagram illustrating the growth journey of a bean plant across four stages from left to right. 1) Seed just planted, small green shoot popping out. 2) Smaller green shoot popping out with early roots. 3) Plant with several leaves and a measuring ruler next to it. 4) Mature plant with small white flowers. The background shows blurred green foliage. Below the diagram, an illustrative grid paper showing a 描繪葉子輪廓 (drawing of a leaf outline) conceptualization.
+                        "imageUrl": "concept_plant_lifecycle_ai.png",
                         "lessonHTML": `
                             <h3>🌱 蔬菜的一生：從種子到大樹</h3>
                             <p>種菜就像照顧小寶寶一樣，它們會經歷神奇的變化：</p>
@@ -233,7 +230,6 @@
         chaptersContainer.innerHTML = ""; 
         
         unitData.sections.forEach((sec, index) => {
-            // 將要朗讀的內容去除 HTML 標籤後，存入全域物件中
             const rawText = (sec.chapterTitle + "。" + sec.lessonHTML + sec.applicationText).replace(/<[^>]+>/g, ' ');
             window.speakData[`lesson_${index}`] = rawText;
 
@@ -243,7 +239,8 @@
                         <span>📌 ${sec.chapterTitle}</span>
                         <button class="btn-speak" onclick="speakText('lesson_${index}')">🔊 唸課文給我聽</button>
                     </div>
-                    <img src="${sec.imageUrl}" alt="課程圖片" class="lesson-img">
+                    <img src="${sec.imageUrl}" alt="課程圖片 (AI生成概念圖)" class="lesson-img">
+                    <p class="ai-note">(注：此圖為 AI 根據課文內容生成之學習情境圖)</p>
                     <div class="lesson-content">
                         ${sec.lessonHTML}
                     </div>
@@ -273,8 +270,8 @@
                 </label>
             `).join('');
 
-            // 將題目朗讀內容存入
-            window.speakData[`q_${index}`] = `第${index + 1}題：${q.q} 選項A：${q.options[0]}。選項B：${q.options[1]}。選項C：${q.options[2]}。選項D：${q.options[3]}`;
+            // 【音檔選項優化】：朗讀內容完全去除 "A/B/C/D"
+            window.speakData[`q_${index}`] = `第${index + 1}題：${q.q}。第一個選項：${q.options[0]}。第二個選項：${q.options[1]}。第三個選項：${q.options[2]}。第四個選項：${q.options[3]}`;
 
             container.innerHTML += `
                 <div class="question-card" id="card-${index}">
@@ -330,7 +327,6 @@
         document.getElementById('score-display').scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
-    // 重新出題：加入防呆機制
     function randomizeQuiz() {
         if(confirm("確定要重新隨機出題嗎？這會清除你目前的作答紀錄喔！")) {
             currentQuestions.sort(() => Math.random() - 0.5);
@@ -346,7 +342,7 @@
         }
 
         container.innerHTML = userMistakes.map((q, index) => {
-            // 將錯題朗讀內容存入
+            // 【錯題區選項優化】：朗讀內容完全去除 "A/B/C/D"
             window.speakData[`mistake_${index}`] = `題目：${q.q}。正確答案是：${q.options[q.ans]}。說明：${q.exp}`;
             
             return `
@@ -362,7 +358,6 @@
         }).join('');
     }
 
-    // 清空錯題：已有防呆機制，確認文字優化
     function clearMistakes() {
         if(confirm("確定要清空當前單元所有的錯題紀錄嗎？清空後就無法復原囉！")) {
             userMistakes = [];
