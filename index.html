@@ -20,19 +20,35 @@
         .chapter-box { border: 2px solid var(--light-blue); border-radius: 8px; padding: 20px; margin-bottom: 30px; }
         .chapter-title { color: var(--primary); font-size: 1.3em; margin-top: 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;}
         
-        /* 圖片區塊 */
-        .lesson-img { width: 100%; max-height: 400px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        /* 🎨 全新：學習資訊圖卡 (Infographic) 樣式 */
+        .infographic { background: #fff; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border: 2px solid #e2e8f0; text-align: center; }
+        .info-grid { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-top: 15px; }
+        .info-card { background: var(--light-blue); padding: 15px; border-radius: 8px; flex: 1 1 120px; border-bottom: 4px solid var(--primary); }
+        .info-card .emoji { font-size: 2.5rem; display: block; margin-bottom: 5px; }
+        .info-card .part { font-weight: bold; color: var(--primary); font-size: 1.2rem; }
+        .info-card .eg { font-size: 0.9rem; color: #555; }
         
+        /* 步驟流程圖卡樣式 */
+        .timeline { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
+        .timeline-step { flex: 1; text-align: center; background: #ebf7f0; padding: 15px; border-radius: 50%; min-width: 80px; aspect-ratio: 1; display: flex; flex-direction: column; justify-content: center; border: 3px solid var(--success); }
+        .timeline-arrow { color: #ccc; font-size: 1.5rem; }
+
         .lesson-content { background: var(--lesson-bg); padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px dashed #f1c40f; font-size: 1.1em; line-height: 1.8; }
         .lesson-content h3 { color: #d35400; margin-top: 0; border-bottom: 2px solid #fad7a1; padding-bottom: 5px; }
         .lesson-content ul, .lesson-content ol { padding-left: 20px; margin-bottom: 0; }
         .lesson-content li { margin-bottom: 10px; }
         .keyword { font-weight: bold; color: #c0392b; background: #fadbd8; padding: 2px 5px; border-radius: 3px; }
         
-        /* 全新的思辨區塊設計 */
-        .life-app { background: #fdf2e9; padding: 20px; border-radius: 8px; border-left: 5px solid #e67e22; margin-top: 15px; position: relative;}
+        /* 🧠 腦力激盪與滑鼠懸停顯示解答 */
+        .life-app { background: #fdf2e9; padding: 20px; border-radius: 8px; border-left: 5px solid #e67e22; margin-top: 15px; }
         .life-app h3 { margin-top: 0; color: #d35400; display: inline-block; margin-bottom: 10px;}
-        .life-app .think-box { background: #fff; padding: 15px; border-radius: 5px; border: 1px solid #fdebd0; color: #555; }
+        .think-box { background: #fff; padding: 15px; border-radius: 5px; border: 1px solid #fdebd0; color: #555; margin-bottom: 15px;}
+        
+        .hover-reveal { position: relative; background: #e9ecef; padding: 20px; border-radius: 8px; text-align: center; cursor: pointer; border: 2px dashed #bdc3c7; overflow: hidden; }
+        .hover-reveal .answer-text { opacity: 0; transition: opacity 0.3s; color: var(--success); font-weight: bold; font-size: 1.1em; }
+        .hover-reveal::before { content: "👀 將滑鼠移過來 (或點擊) 看解答！"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #7f8c8d; font-weight: bold; transition: opacity 0.3s; pointer-events: none; width: 100%;}
+        .hover-reveal:hover .answer-text, .hover-reveal:active .answer-text { opacity: 1; }
+        .hover-reveal:hover::before, .hover-reveal:active::before { opacity: 0; }
         
         /* 測驗區 */
         .question-card { background: #f9f9f9; padding: 15px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #eee; position: relative; }
@@ -47,8 +63,11 @@
         button:hover { filter: brightness(1.1); transform: scale(1.02); }
         .btn-danger { background: var(--danger); }
         .btn-secondary { background: #95a5a6; }
-        .btn-speak { background: var(--speak-bg); padding: 5px 12px; font-size: 14px; border-radius: 20px; flex-shrink: 0; }
-        .btn-speak:hover { background: #9b59b6; }
+        
+        /* 語音按鈕專屬設計 */
+        .btn-speak { background: var(--speak-bg); padding: 5px 12px; font-size: 14px; border-radius: 20px; flex-shrink: 0; min-width: 120px; text-align: center;}
+        .btn-speak.playing { background: #e67e22; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(230, 126, 34, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(230, 126, 34, 0); } 100% { box-shadow: 0 0 0 0 rgba(230, 126, 34, 0); } }
         
         .feedback { margin-top: 10px; font-weight: bold; display: none; padding: 10px; border-radius: 4px; }
         .feedback.show { display: block; }
@@ -100,8 +119,11 @@
 </div>
 
 <script>
+    // 【語音系統】：播放/暫停/繼續 狀態管理
     let synth = window.speechSynthesis;
     let voiceList = [];
+    let currentUtterance = null;
+    let currentBtn = null;
     
     function loadVoices() { voiceList = synth.getVoices(); }
     loadVoices();
@@ -109,34 +131,71 @@
 
     window.speakData = {};
 
-    function speakText(key) {
-        if (!synth) { alert("哎呀，您的瀏覽器似乎不支援語音功能喔！"); return; }
-        
+    function toggleSpeak(key, btnElement) {
+        if (!synth) { alert("瀏覽器不支援語音功能喔！"); return; }
+
+        // 如果點擊的是同一個按鈕
+        if (currentBtn === btnElement) {
+            if (synth.speaking && !synth.paused) {
+                // 正在說話 -> 暫停
+                synth.pause();
+                btnElement.innerHTML = btnElement.getAttribute('data-orig').replace('🔊', '▶️ 繼續');
+                btnElement.classList.remove('playing');
+            } else if (synth.paused) {
+                // 暫停中 -> 繼續
+                synth.resume();
+                btnElement.innerHTML = btnElement.getAttribute('data-orig').replace('🔊', '⏸️ 暫停');
+                btnElement.classList.add('playing');
+            } else {
+                // 說完了，重新播放
+                playNewSpeech(key, btnElement);
+            }
+        } else {
+            // 點擊了不同的按鈕 -> 停止舊的，播放新的
+            if (currentBtn) {
+                currentBtn.innerHTML = currentBtn.getAttribute('data-orig');
+                currentBtn.classList.remove('playing');
+            }
+            synth.cancel(); 
+            playNewSpeech(key, btnElement);
+        }
+    }
+
+    function playNewSpeech(key, btnElement) {
         const text = window.speakData[key];
         if(!text) return;
 
-        synth.cancel(); 
+        currentBtn = btnElement;
+        if(!btnElement.hasAttribute('data-orig')) {
+            btnElement.setAttribute('data-orig', btnElement.innerHTML);
+        }
+
         let utterThis = new SpeechSynthesisUtterance(text);
         utterThis.lang = 'zh-TW';
-        
-        // 【音調與語速調整】：更沉穩的女聲
         utterThis.pitch = 1.0; 
         utterThis.rate = 0.9; 
         
-        // 【尋找其他女聲】：優先尋找 Hanhan, Xiaoxiao, 或清單中的第二/第三個中文語音
         let zhVoices = voiceList.filter(v => v.lang.includes('zh-TW') || v.lang.includes('zh-CN') || v.lang.includes('zh-HK'));
         let selectedVoice = zhVoices.find(v => v.name.includes('Hanhan') || v.name.includes('Xiaoxiao') || v.name.includes('Ting-Ting'));
-        
-        if (!selectedVoice && zhVoices.length > 1) {
-            selectedVoice = zhVoices[1]; // 如果找不到特定名字，抓第二個聲音替換
-        } else if (!selectedVoice) {
-            selectedVoice = zhVoices[0];
-        }
+        if (!selectedVoice && zhVoices.length > 1) selectedVoice = zhVoices[1];
+        else if (!selectedVoice) selectedVoice = zhVoices[0];
         
         if (selectedVoice) utterThis.voice = selectedVoice;
+
+        utterThis.onend = function() {
+            if (currentBtn) {
+                currentBtn.innerHTML = currentBtn.getAttribute('data-orig');
+                currentBtn.classList.remove('playing');
+                currentBtn = null;
+            }
+        };
+
+        btnElement.innerHTML = btnElement.getAttribute('data-orig').replace('🔊', '⏸️ 暫停');
+        btnElement.classList.add('playing');
         synth.speak(utterThis);
     }
 
+    // 【知識庫系統】：加入 HTML Infographics 與解答
     const knowledgeBase = {
         "grade3_term2": {
             "unit1": {
@@ -144,12 +203,23 @@
                 "sections": [
                     {
                         "chapterTitle": "【1-1】 蔬菜是從哪裡來的",
-                        "imageUrl": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=80",
+                        "infographicHTML": `
+                            <div class="infographic">
+                                <h4 style="margin:0; color:#2c3e50;">💡 學習圖解：我們吃的是植物哪裡？</h4>
+                                <div class="info-grid">
+                                    <div class="info-card"><span class="emoji">🥕</span><span class="part">根部</span><br><span class="eg">胡蘿蔔</span></div>
+                                    <div class="info-card"><span class="emoji">🥔</span><span class="part">莖部</span><br><span class="eg">馬鈴薯</span></div>
+                                    <div class="info-card"><span class="emoji">🥬</span><span class="part">葉子</span><br><span class="eg">高麗菜</span></div>
+                                    <div class="info-card"><span class="emoji">🥦</span><span class="part">花朵</span><br><span class="eg">花椰菜</span></div>
+                                    <div class="info-card"><span class="emoji">🍅</span><span class="part">果實</span><br><span class="eg">番茄</span></div>
+                                </div>
+                            </div>
+                        `,
                         "lessonHTML": `
                             <h3>🥦 蔬菜大解密：我們吃的是哪裡？</h3>
                             <p>植物的身體就像機器人一樣，有不同的零件，每個零件都有特別的功能！我們平常吃的蔬菜，其實是植物身體的不同部位喔：</p>
                             <ul>
-                                <li>吃<span class="keyword">根部</span>：像胡蘿蔔、白蘿蔔。它們長在土裡，負責幫植物喝水。</li>
+                                <li>吃<span class="keyword">根部</span>：像胡蘿蔔。它們長在土裡，負責幫植物喝水。</li>
                                 <li>吃<span class="keyword">莖部</span>：像馬鈴薯、芋頭。雖然長在土裡，但它們是植物偷偷藏養分的「地下儲藏室」。</li>
                                 <li>吃<span class="keyword">葉子</span>：像高麗菜、小白菜、菠菜。這是最常見的蔬菜！</li>
                                 <li>吃<span class="keyword">果實</span>：像番茄、小黃瓜、南瓜。裡面通常藏著種子喔。</li>
@@ -163,11 +233,25 @@
                                 有人說番茄甜甜的，裡面還有籽，應該是「水果」；但媽媽煮的番茄炒蛋，又把它當成「蔬菜」。<br><br>
                                 <strong>👉 想一想：</strong>如果從我們剛剛學到的「植物構造」來看，番茄是開花之後結出來的部位，那你覺得它在植物學上，應該屬於哪一個部位呢？
                             </div>
+                            <div class="hover-reveal">
+                                <div class="answer-text">
+                                    💡 解答：在植物科學上，番茄因為是由花朵發育而來，而且「裡面包著種子」，所以它絕對是植物的<strong>「果實」</strong>喔！只是因為它不那麼甜，我們習慣把它當蔬菜煮來吃。
+                                </div>
+                            </div>
                         `
                     },
                     {
                         "chapterTitle": "【1-2】 哪些因素會影響蔬菜生長",
-                        "imageUrl": "https://images.unsplash.com/photo-1416879598555-220b8fa0d4c8?auto=format&fit=crop&w=800&q=80",
+                        "infographicHTML": `
+                            <div class="infographic">
+                                <h4 style="margin:0; color:#2c3e50;">💡 學習圖解：植物生長三大法寶</h4>
+                                <div class="info-grid">
+                                    <div class="info-card" style="border-bottom-color: #f1c40f;"><span class="emoji">☀️</span><span class="part">陽光</span><br><span class="eg">幫助葉子製造食物</span></div>
+                                    <div class="info-card" style="border-bottom-color: #3498db;"><span class="emoji">💧</span><span class="part">空氣與水</span><br><span class="eg">保持濕潤但不能積水</span></div>
+                                    <div class="info-card" style="border-bottom-color: #8e44ad;"><span class="emoji">🌱</span><span class="part">土壤養分</span><br><span class="eg">提供長大的肥料</span></div>
+                                </div>
+                            </div>
+                        `,
                         "lessonHTML": `
                             <h3>☀️ 植物的魔法三大法寶</h3>
                             <p>如果你想當一個厲害的小農夫，一定要知道植物長大需要的三個魔法寶物：</p>
@@ -184,11 +268,29 @@
                                 我們說植物需要「陽光」才會長得好、綠油油的。可是，你有沒有吃過「豆芽菜」？它長得白白胖胖的，而且是在「沒有陽光」的暗房裡種出來的喔！<br><br>
                                 <strong>👉 想一想：</strong>為什麼豆芽菜不用曬太陽也能長大？它的養分是從哪裡來的呢？（提示：觀察一下豆芽菜最下面那一顆黃黃的豆子！）
                             </div>
+                            <div class="hover-reveal">
+                                <div class="answer-text">
+                                    💡 解答：因為豆芽菜還在「發芽初期」！它靠著底部那一顆大大的「黃豆或綠豆」裡面自帶的養分（就像帶了便當）就能長大。等便當吃完，它就必須要去曬太陽才能繼續生存了。
+                                </div>
+                            </div>
                         `
                     },
                     {
                         "chapterTitle": "【1-3】 蔬菜生長會經歷哪些變化",
-                        "imageUrl": "https://images.unsplash.com/photo-1593691509543-c55fb32e7355?auto=format&fit=crop&w=800&q=80",
+                        "infographicHTML": `
+                            <div class="infographic">
+                                <h4 style="margin:0; color:#2c3e50;">💡 學習圖解：蔬菜的一生</h4>
+                                <div class="timeline">
+                                    <div class="timeline-step"><span class="emoji">🌰</span><span class="part">1. 播種</span></div>
+                                    <div class="timeline-arrow">➔</div>
+                                    <div class="timeline-step"><span class="emoji">🌱</span><span class="part">2. 發芽</span></div>
+                                    <div class="timeline-arrow">➔</div>
+                                    <div class="timeline-step"><span class="emoji">🌿</span><span class="part">3. 長葉</span></div>
+                                    <div class="timeline-arrow">➔</div>
+                                    <div class="timeline-step"><span class="emoji">🌼</span><span class="part">4. 開花結果</span></div>
+                                </div>
+                            </div>
+                        `,
                         "lessonHTML": `
                             <h3>🌱 蔬菜的一生：從種子到大樹</h3>
                             <p>種菜就像照顧小寶寶一樣，它們會經歷神奇的變化：</p>
@@ -205,7 +307,12 @@
                             <div class="think-box">
                                 <strong>情境：為什麼要「拔掉」健康的小苗？</strong><br>
                                 在種菜時，如果同一個盆子裡長出太多小苗，農夫會狠心地進行「疏苗」，把一些看起來也很健康的小苗直接拔掉。<br><br>
-                                <strong>👉 想一想：</strong>如果不拔掉它們，讓大家一起擠在盆子裡長大，最後會發生什麼事？這跟我們「一個小房間擠了20個人」有什麼相似的地方？
+                                <strong>👉 想一想：</strong>如果不拔掉它們，讓大家一起擠在盆子裡長大，最後會發生什麼事？
+                            </div>
+                            <div class="hover-reveal">
+                                <div class="answer-text">
+                                    💡 解答：如果大家擠在一起，泥土裡的「養分」和「水分」就會不夠分，而且互相遮擋「陽光」。最後全部的苗都會長得又矮又瘦！所以必須犧牲一些，讓留下來的苗有足夠空間長成大蔬菜。
+                                </div>
                             </div>
                         `
                     }
@@ -246,16 +353,19 @@
         chaptersContainer.innerHTML = ""; 
         
         unitData.sections.forEach((sec, index) => {
-            const rawText = (sec.chapterTitle + "。" + sec.lessonHTML + sec.applicationText).replace(/<[^>]+>/g, ' ');
+            // 解析解答文字供語音朗讀
+            let answerMatch = sec.applicationText.match(/<div class="answer-text">([\s\S]*?)<\/div>/);
+            let rawAnswer = answerMatch ? answerMatch[1].replace(/<[^>]+>/g, '') : "";
+            const rawText = (sec.chapterTitle + "。" + sec.lessonHTML + sec.applicationText).replace(/<[^>]+>/g, ' ') + rawAnswer;
             window.speakData[`lesson_${index}`] = rawText;
 
             chaptersContainer.innerHTML += `
                 <div class="chapter-box">
                     <div class="chapter-title">
                         <span>📌 ${sec.chapterTitle}</span>
-                        <button class="btn-speak" onclick="speakText('lesson_${index}')">🔊 唸課文給我聽</button>
+                        <button class="btn-speak" onclick="toggleSpeak('lesson_${index}', this)">🔊 唸課文給我聽</button>
                     </div>
-                    <img src="${sec.imageUrl}" alt="課程教學圖片" class="lesson-img">
+                    ${sec.infographicHTML}
                     <div class="lesson-content">
                         ${sec.lessonHTML}
                     </div>
@@ -291,7 +401,7 @@
                 <div class="question-card" id="card-${index}">
                     <div class="question-title">
                         <span>${index + 1}. ${q.q}</span>
-                        <button class="btn-speak" onclick="speakText('q_${index}')">🔊 唸題目</button>
+                        <button class="btn-speak" onclick="toggleSpeak('q_${index}', this)">🔊 唸題目</button>
                     </div>
                     <div class="options">${optionsHtml}</div>
                     <div class="feedback" id="feedback-${index}"></div>
@@ -362,7 +472,7 @@
             <div class="mistake-item">
                 <div style="font-weight:bold; display:flex; justify-content:space-between;">
                     <span>Q: ${q.q}</span>
-                    <button class="btn-speak" style="padding: 2px 8px;" onclick="speakText('mistake_${index}')">🔊 唸這題</button>
+                    <button class="btn-speak" style="padding: 2px 8px;" onclick="toggleSpeak('mistake_${index}', this)">🔊 唸這題</button>
                 </div>
                 <div style="color:var(--danger); margin-top:5px;">👉 正確答案：${String.fromCharCode(65 + q.ans)}. ${q.options[q.ans]}</div>
                 <div class="explanation">💡 說明：${q.exp}</div>
