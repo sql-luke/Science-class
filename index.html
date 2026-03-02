@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>自然科學學習網 - 康軒三下</title>
     <style>
-        :root { --primary: #2980b9; --secondary: #2c3e50; --bg: #f4f7f6; --danger: #e74c3c; --success: #27ae60; --light-blue: #ebf5fb; }
+        :root { --primary: #2980b9; --secondary: #2c3e50; --bg: #f4f7f6; --danger: #e74c3c; --success: #27ae60; --light-blue: #ebf5fb; --speak-bg: #f39c12; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); color: #333; line-height: 1.6; margin: 0; padding: 0; }
         
         /* 固定頂部導覽列 */
@@ -20,28 +20,31 @@
         
         /* 章節區塊 */
         .chapter-box { border: 2px solid var(--light-blue); border-radius: 8px; padding: 20px; margin-bottom: 30px; }
-        .chapter-title { color: var(--primary); font-size: 1.3em; margin-top: 0; display: flex; align-items: center; gap: 10px; }
+        .chapter-title { color: var(--primary); font-size: 1.3em; margin-top: 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;}
         
         /* 影片與生活應用區 */
         .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin-bottom: 20px; background: #000; }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-        .life-app { background: #e8f8f5; padding: 15px; border-radius: 8px; border-left: 5px solid #1abc9c; margin-top: 15px; }
-        .life-app h3 { margin-top: 0; color: #16a085; }
+        .life-app { background: #e8f8f5; padding: 15px; border-radius: 8px; border-left: 5px solid #1abc9c; margin-top: 15px; position: relative;}
+        .life-app h3 { margin-top: 0; color: #16a085; display: inline-block;}
         
         /* 測驗區 */
-        .question-card { background: #f9f9f9; padding: 15px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #eee; }
-        .question-title { font-weight: bold; margin-bottom: 10px; font-size: 1.1em; }
+        .question-card { background: #f9f9f9; padding: 15px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #eee; position: relative; }
+        .question-title { font-weight: bold; margin-bottom: 10px; font-size: 1.1em; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
         .options label { display: block; padding: 8px; cursor: pointer; border-radius: 4px; transition: background 0.2s; }
         .options label:hover { background: #e2e8f0; }
         input[type="radio"] { margin-right: 10px; }
         
-        /* 按鈕與回饋 */
+        /* 按鈕設計 */
         .btn-group { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
         button { background: var(--primary); color: #fff; border: none; padding: 12px 24px; font-size: 16px; border-radius: 5px; cursor: pointer; transition: 0.3s; font-weight: bold; }
-        button:hover { filter: brightness(1.1); }
+        button:hover { filter: brightness(1.1); transform: scale(1.02); }
         .btn-danger { background: var(--danger); }
         .btn-secondary { background: #95a5a6; }
+        .btn-speak { background: var(--speak-bg); padding: 5px 12px; font-size: 14px; border-radius: 20px; flex-shrink: 0; }
+        .btn-speak:hover { background: #d68910; }
         
+        /* 回饋區 */
         .feedback { margin-top: 10px; font-weight: bold; display: none; padding: 10px; border-radius: 4px; }
         .feedback.show { display: block; }
         .text-success { color: var(--success); background: #ebf7f0; }
@@ -59,18 +62,15 @@
     <div class="selectors">
         <select id="grade-select" onchange="loadCourse()">
             <option value="grade3_term2">三年級下學期 (自然)</option>
-            <option value="grade4_term1">四年級上學期 (預留擴充)</option>
         </select>
         <select id="unit-select" onchange="loadCourse()">
             <option value="unit1">第一單元：田園樂</option>
-            <option value="unit2">第二單元：百變水精靈 (預留)</option>
         </select>
     </div>
     <h1 id="course-title">載入中...</h1>
 </header>
 
 <div class="container">
-    
     <section>
         <h2>📖 課程學習區</h2>
         <div id="chapters-container"></div>
@@ -81,14 +81,14 @@
         <div id="quiz-container"></div>
         <div id="score-display"></div>
         <div class="btn-group">
-            <button onclick="submitQuiz()">送出答案</button>
+            <button onclick="submitQuiz()">✅ 送出答案</button>
             <button class="btn-secondary" onclick="randomizeQuiz()">🔄 重新隨機出題</button>
         </div>
     </section>
 
     <section id="mistake-section">
         <h2>❌ 專屬錯題區 (知識補給站)</h2>
-        <p style="font-size:0.9em; color:#666;">這裡記錄了你曾經答錯的題目，多複習幾次就能變成長期記憶喔！</p>
+        <p style="font-size:0.9em; color:#666;">這裡記錄了你曾經答錯的題目，多聽、多看幾次就能變成長期記憶喔！</p>
         <div id="mistake-list"></div>
         <div class="btn-group" style="margin-top: 15px;">
             <button class="btn-danger" onclick="clearMistakes()">🗑️ 清空錯題區</button>
@@ -97,134 +97,135 @@
 </div>
 
 <script>
-    // 【知識庫系統】: 將結構分為年級 -> 單元 -> 章節(sections) -> 考題
+    // 【語音系統】：初始化並設定「小姐姐」聲音參數
+    let synth = window.speechSynthesis;
+    let voiceList = [];
+    
+    function loadVoices() {
+        voiceList = synth.getVoices();
+    }
+    loadVoices();
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+        speechSynthesis.onvoiceschanged = loadVoices;
+    }
+
+    function speakText(text) {
+        if (!synth) {
+            alert("哎呀！你的瀏覽器似乎不支援語音功能喔！");
+            return;
+        }
+        synth.cancel(); // 停止目前正在唸的聲音
+        
+        let utterThis = new SpeechSynthesisUtterance(text);
+        utterThis.lang = 'zh-TW';
+        utterThis.pitch = 1.3; // 提高音調，聽起來比較年輕可愛
+        utterThis.rate = 0.95; // 語速稍微放慢，讓小朋友聽得清楚
+        
+        // 嘗試尋找台灣的女聲 (不同瀏覽器命名不同)
+        let femaleVoice = voiceList.find(v => v.lang.includes('zh-TW') && (v.name.includes('Hsiao') || v.name.includes('Yating') || v.name.includes('Google')));
+        if (femaleVoice) utterThis.voice = femaleVoice;
+        
+        synth.speak(utterThis);
+    }
+
+    // 【知識庫系統】：只需填入 YouTube 的 11 碼 ID
     const knowledgeBase = {
         "grade3_term2": {
             "unit1": {
                 "unitTitle": "第一單元：田園樂",
                 "sections": [
                     {
-                        "chapterTitle": "1-1 認識蔬菜與植物構造",
-                        // 加上完整的 allow 屬性以修復播放問題
-                        "videoIframe": '<iframe src="https://www.youtube.com/embed/3d0yQ-s_hE0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>',
+                        "chapterTitle": "【1-1】 蔬菜是從哪裡來的",
+                        "videoId": "pT-L1O1B1dE", // 請填入 YouTube 影片網址 v= 後面的 11 碼 (目前為公版教學影片ID)
                         "applicationText": `
-                            <h3>💡 舉一反三：餐桌上的植物大點名！</h3>
-                            <p>小朋友，你知道嗎？我們每天便當裡的蔬菜，其實都是植物的不同部位喔！</p>
-                            <ul>
-                                <li><strong>🥬 吃「葉子」：</strong>高麗菜、小白菜。</li>
-                                <li><strong>🥕 吃「根部」：</strong>胡蘿蔔、白蘿蔔（長在土裡，負責吸收水分和養分）。</li>
-                                <li><strong>🍅 吃「果實」：</strong>番茄、小黃瓜。</li>
-                            </ul>
-                            <p><em>✨ 生活應用：今天吃晚餐時，跟家人一起猜猜看，你正在吃的是植物的哪一個部位呢？</em></p>
+                            <h3>💡 舉一反三：走一趟菜市場！</h3>
+                            <p>蔬菜不是憑空變出來的，通常是農夫在田裡辛苦種植，再運送到市場或超市。有些長在土裡，有些攀在架子上。</p>
+                            <p><em>✨ 生活任務：下次跟家人去超市時，找找看有沒有還帶有「泥土」或「根」的蔬菜？這代表它剛離開泥土不久喔！</em></p>
                         `
                     },
                     {
-                        "chapterTitle": "1-2 種菜初體驗 (播種與照顧)",
-                        "videoIframe": '<iframe src="https://www.youtube.com/embed/L1Z94nBIF3k" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>',
+                        "chapterTitle": "【1-2】 哪些因素會影響蔬菜生長",
+                        "videoId": "r5z0H-t2v2I", 
                         "applicationText": `
-                            <h3>💡 舉一反三：植物也要喝水呼吸？</h3>
-                            <p>我們種植盆栽時，盆子底下為什麼要有洞呢？</p>
-                            <ul>
-                                <li>如果水太多排不出去，植物的根就像「泡在水裡不能呼吸」，最後會爛掉喔！</li>
-                                <li><strong>澆水的秘訣：</strong>不是每天猛澆水，而是「摸摸土壤，表面乾了再澆」，而且要澆到水從底下流出來為止！</li>
-                            </ul>
-                            <p><em>✨ 生活應用：去陽台或校園找一個盆栽，觀察它的盆底是不是有排水孔呢？</em></p>
+                            <h3>💡 舉一反三：植物的肚子餓了怎麼辦？</h3>
+                            <p>植物跟我們一樣需要照顧！它們的食物是「陽光」、飲料是「水」、維他命是泥土裡的「養分」。如果把它們關在黑黑的衣櫃裡，它們會變得黃黃瘦瘦的。</p>
+                            <p><em>✨ 觀察任務：看看家裡陽台的植物，它們的葉子是不是都朝著太陽的方向長呢？</em></p>
+                        `
+                    },
+                    {
+                        "chapterTitle": "【1-3】 蔬菜生長會經歷哪些變化",
+                        "videoId": "G00n5h_wXkE", 
+                        "applicationText": `
+                            <h3>💡 舉一反三：幫植物寫日記</h3>
+                            <p>從一顆小小的種子發芽（長出子葉）、長高、開花，最後結出果實或長出大片葉子，這就是蔬菜的一生。</p>
+                            <p><em>✨ 生活紀錄：我們雖然長得沒有植物那麼快，但你也可以用尺量量看自己現在的身高，把自己的生長變化記錄下來！</em></p>
                         `
                     }
                 ],
                 "questions": [
                     { id: 1, q: "種菜的第一步通常是什麼？", options: ["播種", "鬆土", "施肥", "收成"], ans: 1, exp: "鬆土可以讓土壤變得鬆軟透氣，有利於種子發芽和根部生長。" },
-                    { id: 2, q: "種子發芽通常「不需要」下列哪一個條件？", options: ["水分", "空氣", "適當的溫度", "肥料"], ans: 3, exp: "種子發芽初期是依靠種子本身儲存的養分，還不需要施加肥料喔。" },
-                    { id: 3, q: "使用花盆種菜時，為什麼花盆底部要有洞？", options: ["為了好看", "讓多餘的水流出避免根爛掉", "讓蚯蚓跑進去", "減輕花盆重量"], ans: 1, exp: "底部有洞可以幫助排水，如果積水太多，植物的根會無法呼吸而爛掉。" },
-                    { id: 4, q: "觀察蔬菜生長時，我們可以用什麼工具來記錄葉子的大小？", options: ["溫度計", "方格紙", "放大鏡", "滴管"], ans: 1, exp: "把葉子放在方格紙上描繪輪廓，可以清楚算出葉子變大了多少格。" },
+                    { id: 2, q: "種子發芽初期通常「不需要」下列哪一個條件？", options: ["水分", "空氣", "適當的溫度", "肥料"], ans: 3, exp: "發芽初期依靠種子本身的養分，還不需要施加肥料喔。" },
+                    { id: 3, q: "使用花盆種菜時，為什麼花盆底部要有洞？", options: ["為了好看", "讓多餘的水流出避免根爛掉", "讓蚯蚓跑進去", "減輕花盆重量"], ans: 1, exp: "底部有洞幫助排水，積水太多植物的根會無法呼吸而爛掉。" },
+                    { id: 4, q: "觀察蔬菜生長時，我們可以用什麼工具來記錄葉子的大小？", options: ["溫度計", "方格紙", "放大鏡", "滴管"], ans: 1, exp: "放在方格紙上描繪輪廓，可以清楚算出葉子變大了多少格。" },
                     { id: 5, q: "我們常吃的「小白菜」主要是植物的哪個部位？", options: ["根", "莖", "葉", "果實"], ans: 2, exp: "小白菜我們主要是吃它綠色的葉片部分。" },
-                    { id: 6, q: "我們常吃的「胡蘿蔔」主要是植物的哪個部位？", options: ["根", "莖", "葉", "果實"], ans: 0, exp: "胡蘿蔔是儲存滿滿養分的「地下根」。" },
-                    { id: 7, q: "如果發現蔬菜的葉子上有許多破洞，最可能是什麼原因？", options: ["太陽太大曬破的", "被菜蟲咬的", "水澆太多", "風吹破的"], ans: 1, exp: "葉子上的破洞通常是蝴蝶幼蟲（毛毛蟲）等昆蟲啃食造成的。" },
-                    { id: 8, q: "當蔬菜長得太擁擠時，為什麼要進行「疏苗」（拔掉一些小苗）？", options: ["讓剩下的苗有更多生長空間和養分", "為了讓花盆變輕", "為了讓土壤變少", "讓蟲子沒東西吃"], ans: 0, exp: "疏苗可以減少競爭，讓留下來的健康小苗長得更好、更大。" },
-                    { id: 9, q: "種植攀緣植物（例如小黃瓜、絲瓜）時，我們需要幫它準備什麼？", options: ["很大的水桶", "支架或網子讓它攀爬", "黑布蓋住", "保暖的燈"], ans: 1, exp: "攀緣植物的莖比較軟，需要依靠捲鬚或莖纏繞在支架上才能向上生長吸收陽光。" },
-                    { id: 10, q: "下列哪一種植物適合在陽台種植，且生長週期較短，很快就能收成？", options: ["蘋果樹", "小白菜", "高山茶", "稻米"], ans: 1, exp: "小白菜大約一個月左右就能收成，非常適合小朋友觀察與種植。" },
-                    { id: 11, q: "記錄植物生長時，下列哪一項「不是」必要的科學紀錄項目？", options: ["測量日期", "植物的高度", "葉子的數量", "今天下課玩了什麼"], ans: 3, exp: "科學紀錄要專注於植物本身的變化以及天氣、澆水等變因。" },
-                    { id: 12, q: "關於澆水的觀念，哪一個是正確的？", options: ["每天不管天氣都要澆一大桶水", "觀察土壤表面微乾時再澆水", "只能在中午大太陽時澆水", "只要噴溼葉子就好"], ans: 1, exp: "澆水要看土壤濕度，並且要澆透（水從盆底流出），中午大太陽澆水容易讓植物受傷。" },
-                    { id: 13, q: "蔬菜收成後，剩下的菜葉或菜根可以怎麼處理最環保？", options: ["直接丟進一般垃圾桶", "沖進馬桶裡", "製作成堆肥變回土壤的養分", "燒掉"], ans: 2, exp: "落葉、菜根都可以做成有機堆肥，這也是大自然循環的一部分。" },
-                    { id: 14, q: "植物的「根」通常有什麼主要功能？", options: ["吸收陽光", "吸收泥土裡的水分和養分", "開花結果", "吸引蝴蝶來採蜜"], ans: 1, exp: "根就像植物的吸管和地基，負責喝水並抓緊土壤。" },
-                    { id: 15, q: "自己動手學習種菜的過程中，我們可以學到什麼最重要的態度？", options: ["體會農夫辛勞並珍惜食物", "知道怎麼浪費水", "知道植物不理它也會自己長大", "學會討厭吃青菜"], ans: 0, exp: "親手種菜能讓我們明白「一分耕耘，一分收穫」，進而對食物懷抱感恩的心。" }
+                    { id: 6, q: "我們常吃的「胡蘿蔔」主要是植物的哪個部位？", options: ["根", "莖", "葉", "果實"], ans: 0, exp: "胡蘿蔔是儲存滿滿養分的地下根。" },
+                    { id: 7, q: "如果發現蔬菜的葉子上有許多破洞，最可能是什麼原因？", options: ["太陽太大曬破的", "被菜蟲咬的", "水澆太多", "風吹破的"], ans: 1, exp: "葉子上的破洞通常是毛毛蟲等昆蟲啃食造成的。" },
+                    { id: 8, q: "當蔬菜長得太擁擠時，為什麼要進行「疏苗」？", options: ["讓剩下的苗有更多生長空間和養分", "為了讓花盆變輕", "為了讓土壤變少", "讓蟲子沒東西吃"], ans: 0, exp: "減少競爭，讓留下來的小苗長得更好。" },
+                    { id: 9, q: "種植攀緣植物（例如絲瓜）時，我們需要幫它準備什麼？", options: ["很大的水桶", "支架或網子讓它攀爬", "黑布蓋住", "保暖的燈"], ans: 1, exp: "莖比較軟，需要依靠支架才能向上生長吸收陽光。" },
+                    { id: 10, q: "下列哪一種植物適合在陽台種植，且生長週期較短？", options: ["蘋果樹", "小白菜", "高山茶", "稻米"], ans: 1, exp: "小白菜大約一個月左右就能收成，適合觀察種植。" },
+                    { id: 11, q: "記錄植物生長時，下列哪一項「不是」必要的科學紀錄項目？", options: ["測量日期", "植物的高度", "葉子的數量", "今天晚餐吃什麼"], ans: 3, exp: "科學紀錄要專注於植物本身的變化以及天氣、澆水等變因。" },
+                    { id: 12, q: "關於澆水的觀念，哪一個是正確的？", options: ["每天都要澆一大桶水", "觀察土壤表面微乾時再澆水", "只能在中午大太陽時澆水", "只要噴溼葉子就好"], ans: 1, exp: "澆水要看土壤濕度，並且要澆透，中午大太陽澆水容易讓植物受傷。" },
+                    { id: 13, q: "蔬菜收成後，剩下的菜葉或菜根可以怎麼處理最環保？", options: ["直接丟垃圾桶", "沖進馬桶裡", "製作成堆肥變回土壤養分", "燒掉"], ans: 2, exp: "落葉、菜根都可以做成有機堆肥，這是大自然循環的一部分。" },
+                    { id: 14, q: "植物的「根」通常有什麼主要功能？", options: ["吸收陽光", "吸收泥土裡的水分並固定植物", "開花結果", "吸引蝴蝶採蜜"], ans: 1, exp: "根負責喝水並抓緊土壤。" },
+                    { id: 15, q: "植物的生長通常會經歷什麼過程？", options: ["結果、開花、發芽", "發芽、長葉、開花、結果", "長葉、結果、發芽", "開花、發芽、結果"], ans: 1, exp: "種子會先發芽長葉，成熟後開花，最後結出果實與種子。" }
                 ]
-            },
-            "unit2": {
-                "unitTitle": "第二單元：百變水精靈 (建置中)",
-                "sections": [
-                    {
-                        "chapterTitle": "2-1 尋找生活中的水",
-                        "videoIframe": '<div style="color:#aaa; text-align:center; padding: 20px;">影片建置中...</div>',
-                        "applicationText": "<h3>💡 舉一反三：</h3><p>內容準備中...</p>"
-                    }
-                ],
-                "questions": []
-            }
-        },
-        "grade4_term1": {
-            "unit1": {
-                "unitTitle": "四年級內容建置中",
-                "sections": [],
-                "questions": []
             }
         }
     };
 
-    // 狀態變數
     let currentQuestions = [];
     let currentGrade = "grade3_term2";
     let currentUnit = "unit1";
     let userMistakes = [];
 
-    // 載入課程內容 (切換選單時觸發)
     function loadCourse() {
-        currentGrade = document.getElementById('grade-select').value;
-        currentUnit = document.getElementById('unit-select').value;
-        
         const unitData = knowledgeBase[currentGrade][currentUnit];
         if(!unitData) return;
 
-        // 1. 更新標題
         document.getElementById('course-title').innerText = unitData.unitTitle;
 
-        // 2. 載入多個章節 (Sections) 與生活應用
         const chaptersContainer = document.getElementById('chapters-container');
-        chaptersContainer.innerHTML = ""; // 清空舊內容
+        chaptersContainer.innerHTML = ""; 
         
-        if (unitData.sections.length > 0) {
-            unitData.sections.forEach((sec, index) => {
-                chaptersContainer.innerHTML += `
-                    <div class="chapter-box">
-                        <h3 class="chapter-title">📌 ${sec.chapterTitle}</h3>
-                        <div class="video-wrapper">
-                            ${sec.videoIframe}
-                        </div>
-                        <div class="life-app">
-                            ${sec.applicationText}
-                        </div>
-                    </div>
-                `;
-            });
-        } else {
-            chaptersContainer.innerHTML = "<p>此單元內容尚在建置中...</p>";
-        }
+        unitData.sections.forEach((sec) => {
+            // 動態生成安全的 YouTube 嵌入語法
+            const iframeHTML = `<iframe src="https://www.youtube.com/embed/${sec.videoId}?rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+            
+            // 將生活應用區塊的文字轉為純文字，供語音朗讀使用
+            const plainTextForSpeech = sec.applicationText.replace(/<[^>]+>/g, '');
 
-        // 3. 載入錯題與測驗
+            chaptersContainer.innerHTML += `
+                <div class="chapter-box">
+                    <div class="chapter-title">
+                        <span>📌 ${sec.chapterTitle}</span>
+                        <button class="btn-speak" onclick="speakText('${sec.chapterTitle}。${plainTextForSpeech}')">🔊 唸課文給我聽</button>
+                    </div>
+                    <div class="video-wrapper">
+                        ${iframeHTML}
+                    </div>
+                    <div class="life-app">
+                        ${sec.applicationText}
+                    </div>
+                </div>
+            `;
+        });
+
         userMistakes = JSON.parse(localStorage.getItem(`scienceMistakes_${currentGrade}_${currentUnit}`)) || [];
         currentQuestions = [...(unitData.questions || [])];
-        
-        if(currentQuestions.length > 0) {
-            randomizeQuiz();
-        } else {
-            document.getElementById('quiz-container').innerHTML = "<p>此單元題庫建置中...</p>";
-            document.getElementById('score-display').innerText = "";
-        }
-        
+        randomizeQuiz();
         renderMistakes();
     }
 
-    // 渲染題目
     function renderQuiz() {
         const container = document.getElementById('quiz-container');
         container.innerHTML = '';
@@ -238,9 +239,15 @@
                 </label>
             `).join('');
 
+            // 準備朗讀題目的文字
+            let speakTextStr = `第${index + 1}題：${q.q} 選項A：${q.options[0]}。選項B：${q.options[1]}。選項C：${q.options[2]}。選項D：${q.options[3]}`;
+
             container.innerHTML += `
                 <div class="question-card" id="card-${index}">
-                    <div class="question-title">${index + 1}. ${q.q}</div>
+                    <div class="question-title">
+                        <span>${index + 1}. ${q.q}</span>
+                        <button class="btn-speak" onclick="speakText('${speakTextStr}')">🔊 唸題目</button>
+                    </div>
                     <div class="options">${optionsHtml}</div>
                     <div class="feedback" id="feedback-${index}"></div>
                 </div>
@@ -248,10 +255,7 @@
         });
     }
 
-    // 送出並批改
     function submitQuiz() {
-        if(currentQuestions.length === 0) return;
-
         let correctCount = 0;
         let newMistakes = [];
 
@@ -260,7 +264,7 @@
             const feedbackEl = document.getElementById(`feedback-${index}`);
             
             if (!selected) {
-                feedbackEl.innerHTML = "⚠️ 請選擇一個答案！";
+                feedbackEl.innerHTML = "⚠️ 請選擇一個答案喔！";
                 feedbackEl.className = "feedback show text-danger";
                 return;
             }
@@ -269,41 +273,36 @@
             
             if (isCorrect) {
                 correctCount++;
-                feedbackEl.innerHTML = "✅ 答對了！<div class='explanation'>" + q.exp + "</div>";
+                feedbackEl.innerHTML = `✅ 答對了！<div class='explanation'>${q.exp}</div>
+                                        <button class="btn-speak" style="margin-top:5px; font-size:12px;" onclick="speakText('答對了！${q.exp}')">🔊 聽解答</button>`;
                 feedbackEl.className = "feedback show text-success";
             } else {
-                feedbackEl.innerHTML = `❌ 答錯了。正確答案是：${String.fromCharCode(65 + q.ans)}。<div class='explanation'>💡 訂正說明：${q.exp}</div>`;
+                feedbackEl.innerHTML = `❌ 答錯了。正確答案是：${String.fromCharCode(65 + q.ans)}。
+                                        <div class='explanation'>💡 說明：${q.exp}</div>
+                                        <button class="btn-speak" style="margin-top:5px; font-size:12px;" onclick="speakText('答錯了。正確答案是${String.fromCharCode(65 + q.ans)}。說明：${q.exp}')">🔊 聽訂正</button>`;
                 feedbackEl.className = "feedback show text-danger";
                 
-                // 記錄錯題
-                if (!userMistakes.some(m => m.id === q.id)) {
-                    newMistakes.push(q);
-                }
+                if (!userMistakes.some(m => m.id === q.id)) newMistakes.push(q);
             }
         });
 
-        // 計算分數
         const score = Math.round((correctCount / currentQuestions.length) * 100);
         document.getElementById('score-display').innerText = `🎯 測驗結果：答對 ${correctCount} / ${currentQuestions.length} 題，得分：${score} 分`;
 
-        // 儲存錯題
         if (newMistakes.length > 0) {
             userMistakes = [...userMistakes, ...newMistakes];
             localStorage.setItem(`scienceMistakes_${currentGrade}_${currentUnit}`, JSON.stringify(userMistakes));
             renderMistakes();
         }
         
-        // 將畫面捲動到分數顯示區
         document.getElementById('score-display').scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
-    // 重新出題
     function randomizeQuiz() {
         currentQuestions.sort(() => Math.random() - 0.5);
         renderQuiz();
     }
 
-    // 渲染錯題區
     function renderMistakes() {
         const container = document.getElementById('mistake-list');
         if (userMistakes.length === 0) {
@@ -313,14 +312,16 @@
 
         container.innerHTML = userMistakes.map((q, index) => `
             <div class="mistake-item">
-                <div style="font-weight:bold;">Q: ${q.q}</div>
+                <div style="font-weight:bold; display:flex; justify-content:space-between;">
+                    <span>Q: ${q.q}</span>
+                    <button class="btn-speak" style="padding: 2px 8px;" onclick="speakText('題目：${q.q}。正確答案是：${q.options[q.ans]}。說明：${q.exp}')">🔊 唸這題</button>
+                </div>
                 <div style="color:var(--danger); margin-top:5px;">👉 正確答案：${String.fromCharCode(65 + q.ans)}. ${q.options[q.ans]}</div>
                 <div class="explanation">💡 說明：${q.exp}</div>
             </div>
         `).join('');
     }
 
-    // 清空錯題
     function clearMistakes() {
         if(confirm("確定要清空當前單元所有的錯題紀錄嗎？")) {
             userMistakes = [];
@@ -329,7 +330,6 @@
         }
     }
 
-    // 啟動程式
     window.onload = loadCourse;
 </script>
 
