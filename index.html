@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>自然科學學習網 - 康軒三下</title>
     <style>
-        :root { --primary: #2980b9; --secondary: #2c3e50; --bg: #f4f7f6; --danger: #e74c3c; --success: #27ae60; --light-blue: #ebf5fb; --speak-bg: #f39c12; --lesson-bg: #fffde7; }
+        :root { --primary: #2980b9; --secondary: #2c3e50; --bg: #f4f7f6; --danger: #e74c3c; --success: #27ae60; --light-blue: #ebf5fb; --speak-bg: #8e44ad; --lesson-bg: #fffde7; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); color: #333; line-height: 1.6; margin: 0; padding: 0; }
         
         #top-nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 15px 20px; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; align-items: center; gap: 10px; }
@@ -20,9 +20,8 @@
         .chapter-box { border: 2px solid var(--light-blue); border-radius: 8px; padding: 20px; margin-bottom: 30px; }
         .chapter-title { color: var(--primary); font-size: 1.3em; margin-top: 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;}
         
-        /* 圖片區塊優化 (針對AI概念圖優化比例) */
-        .lesson-img { width: 100%; max-height: 450px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .ai-note { font-size: 0.8em; color: #7f8c8d; text-align: center; margin-top: -10px; margin-bottom: 15px; font-style: italic;}
+        /* 圖片區塊 */
+        .lesson-img { width: 100%; max-height: 400px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         
         .lesson-content { background: var(--lesson-bg); padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px dashed #f1c40f; font-size: 1.1em; line-height: 1.8; }
         .lesson-content h3 { color: #d35400; margin-top: 0; border-bottom: 2px solid #fad7a1; padding-bottom: 5px; }
@@ -30,22 +29,26 @@
         .lesson-content li { margin-bottom: 10px; }
         .keyword { font-weight: bold; color: #c0392b; background: #fadbd8; padding: 2px 5px; border-radius: 3px; }
         
-        .life-app { background: #e8f8f5; padding: 15px; border-radius: 8px; border-left: 5px solid #1abc9c; margin-top: 15px; position: relative;}
-        .life-app h3 { margin-top: 0; color: #16a085; display: inline-block;}
+        /* 全新的思辨區塊設計 */
+        .life-app { background: #fdf2e9; padding: 20px; border-radius: 8px; border-left: 5px solid #e67e22; margin-top: 15px; position: relative;}
+        .life-app h3 { margin-top: 0; color: #d35400; display: inline-block; margin-bottom: 10px;}
+        .life-app .think-box { background: #fff; padding: 15px; border-radius: 5px; border: 1px solid #fdebd0; color: #555; }
         
+        /* 測驗區 */
         .question-card { background: #f9f9f9; padding: 15px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #eee; position: relative; }
         .question-title { font-weight: bold; margin-bottom: 10px; font-size: 1.1em; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
         .options label { display: block; padding: 8px; cursor: pointer; border-radius: 4px; transition: background 0.2s; }
         .options label:hover { background: #e2e8f0; }
         input[type="radio"] { margin-right: 10px; }
         
+        /* 按鈕設計 */
         .btn-group { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
         button { background: var(--primary); color: #fff; border: none; padding: 12px 24px; font-size: 16px; border-radius: 5px; cursor: pointer; transition: 0.3s; font-weight: bold; }
         button:hover { filter: brightness(1.1); transform: scale(1.02); }
         .btn-danger { background: var(--danger); }
         .btn-secondary { background: #95a5a6; }
         .btn-speak { background: var(--speak-bg); padding: 5px 12px; font-size: 14px; border-radius: 20px; flex-shrink: 0; }
-        .btn-speak:hover { background: #d68910; }
+        .btn-speak:hover { background: #9b59b6; }
         
         .feedback { margin-top: 10px; font-weight: bold; display: none; padding: 10px; border-radius: 4px; }
         .feedback.show { display: block; }
@@ -116,17 +119,24 @@
         let utterThis = new SpeechSynthesisUtterance(text);
         utterThis.lang = 'zh-TW';
         
-        // 【聲調優化】：調整參數使聲調更柔和
-        utterThis.pitch = 1.15; // 稍微降低音調，更自然
-        utterThis.rate = 0.93; // 稍微放慢語速，更清晰、有耐心
+        // 【音調與語速調整】：更沉穩的女聲
+        utterThis.pitch = 1.0; 
+        utterThis.rate = 0.9; 
         
-        let zhVoice = voiceList.find(v => v.lang.includes('zh-TW') || v.lang.includes('zh'));
-        if (zhVoice) utterThis.voice = zhVoice;
+        // 【尋找其他女聲】：優先尋找 Hanhan, Xiaoxiao, 或清單中的第二/第三個中文語音
+        let zhVoices = voiceList.filter(v => v.lang.includes('zh-TW') || v.lang.includes('zh-CN') || v.lang.includes('zh-HK'));
+        let selectedVoice = zhVoices.find(v => v.name.includes('Hanhan') || v.name.includes('Xiaoxiao') || v.name.includes('Ting-Ting'));
         
+        if (!selectedVoice && zhVoices.length > 1) {
+            selectedVoice = zhVoices[1]; // 如果找不到特定名字，抓第二個聲音替換
+        } else if (!selectedVoice) {
+            selectedVoice = zhVoices[0];
+        }
+        
+        if (selectedVoice) utterThis.voice = selectedVoice;
         synth.speak(utterThis);
     }
 
-    // 【知識庫系統】：加入 AI 生成圖片概念連結
     const knowledgeBase = {
         "grade3_term2": {
             "unit1": {
@@ -134,9 +144,7 @@
                 "sections": [
                     {
                         "chapterTitle": "【1-1】 蔬菜是從哪裡來的",
-                        // AI 圖像生成概念：這張圖是用 descriptive placeholder 替代，概念性地呈現 AI 生成出的蔬菜不同部位解剖圖。
-                        // 提示詞 (概念)：A bright, educational diagram style photograph of various fresh vegetables arranged in a semi-circle on a rustic wooden table. Below each vegetable, there is a distinct icon and illustrative root structure growing into a stylized patch of soil. Clear labels pointing to the roots, stem, leaves, flowers, and fruits. Natural daylight, vibrant colors.
-                        "imageUrl": "concept_vegetable_parts_ai.png",
+                        "imageUrl": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=80",
                         "lessonHTML": `
                             <h3>🥦 蔬菜大解密：我們吃的是哪裡？</h3>
                             <p>植物的身體就像機器人一樣，有不同的零件，每個零件都有特別的功能！我們平常吃的蔬菜，其實是植物身體的不同部位喔：</p>
@@ -149,34 +157,38 @@
                             </ul>
                         `,
                         "applicationText": `
-                            <h3>💡 舉一反三：廚房尋寶大挑戰！</h3>
-                            <p><em>✨ 任務：請去打開家裡的冰箱，找出 3 種蔬菜，然後大聲說出它是植物的「哪一個部位」！</em></p>
+                            <h3>🤔 腦力激盪：小小思辨家</h3>
+                            <div class="think-box">
+                                <strong>情境：番茄到底算不算蔬菜？</strong><br>
+                                有人說番茄甜甜的，裡面還有籽，應該是「水果」；但媽媽煮的番茄炒蛋，又把它當成「蔬菜」。<br><br>
+                                <strong>👉 想一想：</strong>如果從我們剛剛學到的「植物構造」來看，番茄是開花之後結出來的部位，那你覺得它在植物學上，應該屬於哪一個部位呢？
+                            </div>
                         `
                     },
                     {
                         "chapterTitle": "【1-2】 哪些因素會影響蔬菜生長",
-                        // AI 圖像生成概念：概念圖呈現小苗在陽光、水氣和養分泥土中的成長魔法包。
-                        // 提示詞 (概念)：A detailed close-up conceptual photograph of a young bean seedling in a simple terracotta pot sitting on a sunny windowsill. There is a gentle, illustrative overlay showing sun rays (labeled '太陽光'), small water droplets and mist (labeled '水/空氣'), and colorful nutrient particles flowing up from rich, dark soil into the roots (labeled '養分'). The overall atmosphere is warm, gentle, and growth-oriented. The window background shows a blurred garden.
-                        "imageUrl": "concept_growth_factors_ai.png",
+                        "imageUrl": "https://images.unsplash.com/photo-1416879598555-220b8fa0d4c8?auto=format&fit=crop&w=800&q=80",
                         "lessonHTML": `
                             <h3>☀️ 植物的魔法三大法寶</h3>
                             <p>如果你想當一個厲害的小農夫，一定要知道植物長大需要的三個魔法寶物：</p>
                             <ul>
                                 <li>第一寶：<span class="keyword">陽光</span>。植物的葉子像太陽能板，曬太陽就能自己製造食物，如果沒有陽光，植物會變得黃黃瘦瘦的。</li>
-                                <li>第二寶：<span class="keyword">空氣和水</span>。土壤要保持微濕，但盆子底下一定要有洞！如果水太多排不出去，植物的根會因為不能呼吸而爛掉（就像我們在水裡憋氣一樣）。</li>
+                                <li>第二寶：<span class="keyword">空氣和水</span>。土壤要保持微濕，但盆子底下一定要有洞！如果水太多排不出去，植物的根會因為不能呼吸而爛掉。</li>
                                 <li>第三寶：<span class="keyword">土壤與養分</span>。植物在發芽前，會吃「種子」裡面自帶的便當；但長大後，就需要吸收土壤裡的養分（肥料）才會長得又高又壯。</li>
                             </ul>
                         `,
                         "applicationText": `
-                            <h3>💡 舉一反三：盆栽小偵探</h3>
-                            <p><em>✨ 任務：去找家裡或學校的一個盆栽，用手指輕輕摸一下泥土。如果土是乾乾粉粉的，代表它口渴了；如果土是濕濕軟軟的，就代表它現在不缺水喔！</em></p>
+                            <h3>🤔 腦力激盪：小小思辨家</h3>
+                            <div class="think-box">
+                                <strong>情境：黑暗中的豆芽菜</strong><br>
+                                我們說植物需要「陽光」才會長得好、綠油油的。可是，你有沒有吃過「豆芽菜」？它長得白白胖胖的，而且是在「沒有陽光」的暗房裡種出來的喔！<br><br>
+                                <strong>👉 想一想：</strong>為什麼豆芽菜不用曬太陽也能長大？它的養分是從哪裡來的呢？（提示：觀察一下豆芽菜最下面那一顆黃黃的豆子！）
+                            </div>
                         `
                     },
                     {
                         "chapterTitle": "【1-3】 蔬菜生長會經歷哪些變化",
-                        // AI 圖像生成概念：概念圖呈現植物從種子發芽到結果的時間流逝合成圖，學生可看圖量高度。
-                        // 提示詞 (概念)：A conceptual diagram illustrating the growth journey of a bean plant across four stages from left to right. 1) Seed just planted, small green shoot popping out. 2) Smaller green shoot popping out with early roots. 3) Plant with several leaves and a measuring ruler next to it. 4) Mature plant with small white flowers. The background shows blurred green foliage. Below the diagram, an illustrative grid paper showing a 描繪葉子輪廓 (drawing of a leaf outline) conceptualization.
-                        "imageUrl": "concept_plant_lifecycle_ai.png",
+                        "imageUrl": "https://images.unsplash.com/photo-1593691509543-c55fb32e7355?auto=format&fit=crop&w=800&q=80",
                         "lessonHTML": `
                             <h3>🌱 蔬菜的一生：從種子到大樹</h3>
                             <p>種菜就像照顧小寶寶一樣，它們會經歷神奇的變化：</p>
@@ -189,8 +201,12 @@
                             <p>記得喔！觀察植物時，可以用「方格紙」來量葉子的大小，或是用「尺」來量高度，這樣才是厲害的科學家！</p>
                         `,
                         "applicationText": `
-                            <h3>💡 舉一反三：我是科學記錄員</h3>
-                            <p><em>✨ 任務：拿出一張紙，畫下你最喜歡的蔬菜「小時候（種子或小苗）」和「長大後」的樣子！</em></p>
+                            <h3>🤔 腦力激盪：小小思辨家</h3>
+                            <div class="think-box">
+                                <strong>情境：為什麼要「拔掉」健康的小苗？</strong><br>
+                                在種菜時，如果同一個盆子裡長出太多小苗，農夫會狠心地進行「疏苗」，把一些看起來也很健康的小苗直接拔掉。<br><br>
+                                <strong>👉 想一想：</strong>如果不拔掉它們，讓大家一起擠在盆子裡長大，最後會發生什麼事？這跟我們「一個小房間擠了20個人」有什麼相似的地方？
+                            </div>
                         `
                     }
                 ],
@@ -239,8 +255,7 @@
                         <span>📌 ${sec.chapterTitle}</span>
                         <button class="btn-speak" onclick="speakText('lesson_${index}')">🔊 唸課文給我聽</button>
                     </div>
-                    <img src="${sec.imageUrl}" alt="課程圖片 (AI生成概念圖)" class="lesson-img">
-                    <p class="ai-note">(注：此圖為 AI 根據課文內容生成之學習情境圖)</p>
+                    <img src="${sec.imageUrl}" alt="課程教學圖片" class="lesson-img">
                     <div class="lesson-content">
                         ${sec.lessonHTML}
                     </div>
@@ -270,7 +285,6 @@
                 </label>
             `).join('');
 
-            // 【音檔選項優化】：朗讀內容完全去除 "A/B/C/D"
             window.speakData[`q_${index}`] = `第${index + 1}題：${q.q}。第一個選項：${q.options[0]}。第二個選項：${q.options[1]}。第三個選項：${q.options[2]}。第四個選項：${q.options[3]}`;
 
             container.innerHTML += `
@@ -342,7 +356,6 @@
         }
 
         container.innerHTML = userMistakes.map((q, index) => {
-            // 【錯題區選項優化】：朗讀內容完全去除 "A/B/C/D"
             window.speakData[`mistake_${index}`] = `題目：${q.q}。正確答案是：${q.options[q.ans]}。說明：${q.exp}`;
             
             return `
