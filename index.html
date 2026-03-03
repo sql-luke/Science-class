@@ -10,7 +10,7 @@
         
         #top-nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 15px 20px; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; align-items: center; gap: 10px; }
         .selectors { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
-        .selectors select { padding: 8px 15px; border-radius: 5px; font-size: 1rem; border: 1px solid #fff; outline: none; background: #fff; cursor: pointer; }
+        .selectors select { padding: 8px 15px; border-radius: 5px; font-size: 1rem; border: 1px solid #fff; outline: none; background: #fff; cursor: pointer; color: var(--secondary); font-weight: bold;}
         #course-title { margin: 0; font-size: 1.5rem; text-align: center; }
 
         .container { max-width: 900px; margin: 20px auto; padding: 0 20px; }
@@ -90,6 +90,7 @@
         </select>
         <select id="unit-select" onchange="loadCourse()">
             <option value="unit1">第一單元：田園樂</option>
+            <option value="unit2" selected>第二單元：溫度變化對物質的影響</option>
         </select>
     </div>
     <h1 id="course-title">載入中...</h1>
@@ -192,8 +193,10 @@
         synth.speak(utterThis);
     }
 
+    // 【知識庫系統】：整合了單元一與單元二的內容
     const knowledgeBase = {
         "grade3_term2": {
+            // ==================== 第一單元 ====================
             "unit1": {
                 "unitTitle": "第一單元：田園樂",
                 "sections": [
@@ -216,10 +219,10 @@
                             <p>植物的身體就像機器人一樣，有不同的零件，每個零件都有特別的功能！我們平常吃的蔬菜，其實是植物身體的不同部位喔：</p>
                             <ul>
                                 <li>吃<span class="keyword">根部</span>：像胡蘿蔔。它們長在土裡，負責幫植物喝水。</li>
-                                <li>吃<span class="keyword">莖部</span>：像馬鈴薯、芋頭。雖然長在土裡，但它們是植物偷偷藏養分的「地下儲藏室」。</li>
-                                <li>吃<span class="keyword">葉子</span>：像高麗菜、小白菜、菠菜。這是最常見的蔬菜！</li>
-                                <li>吃<span class="keyword">果實</span>：像番茄、小黃瓜、南瓜。裡面通常藏著種子喔。</li>
-                                <li>吃<span class="keyword">花朵</span>：像花椰菜、金針花。沒錯，花椰菜其實是一大團還沒開花的花苞！</li>
+                                <li>吃<span class="keyword">莖部</span>：像馬鈴薯。雖然長在土裡，但它是植物偷偷藏養分的「地下儲藏室」。</li>
+                                <li>吃<span class="keyword">葉子</span>：像高麗菜、小白菜。這是最常見的蔬菜！</li>
+                                <li>吃<span class="keyword">果實</span>：像番茄、南瓜。裡面通常藏著種子喔。</li>
+                                <li>吃<span class="keyword">花朵</span>：像花椰菜。其實是一大團還沒開花的花苞！</li>
                             </ul>
                         `,
                         "applicationText": `
@@ -227,11 +230,11 @@
                             <div class="think-box">
                                 <strong>情境：番茄到底算不算蔬菜？</strong><br>
                                 有人說番茄甜甜的，裡面還有籽，應該是「水果」；但媽媽煮的番茄炒蛋，又把它當成「蔬菜」。<br><br>
-                                <strong>👉 想一想：</strong>如果從我們剛剛學到的「植物構造」來看，番茄是開花之後結出來的部位，那你覺得它在植物學上，應該屬於哪一個部位呢？
+                                <strong>👉 想一想：</strong>如果從我們剛剛學到的「植物構造」來看，番茄是開花之後結出來的部位，那你覺得它應該屬於哪一個部位呢？
                             </div>
                             <div class="hover-reveal">
                                 <div class="answer-text">
-                                    💡 解答：在植物科學上，番茄因為是由花朵發育而來，而且「裡面包著種子」，所以它絕對是植物的「果實」喔！只是因為它不那麼甜，我們習慣把它當蔬菜煮來吃。
+                                    💡 解答：番茄因為是由花朵發育而來，而且「裡面包著種子」，所以它絕對是植物的「果實」喔！只是因為習慣，我們常把它當蔬菜煮。
                                 </div>
                             </div>
                         `
@@ -242,31 +245,31 @@
                             <div class="infographic">
                                 <h4 style="margin:0; color:#2c3e50;">💡 學習圖解：植物生長三大法寶</h4>
                                 <div class="info-grid">
-                                    <div class="info-card" style="border-bottom-color: #f1c40f;"><span class="emoji">☀️</span><span class="part">陽光</span><br><span class="eg">幫助葉子製造食物</span></div>
-                                    <div class="info-card" style="border-bottom-color: #3498db;"><span class="emoji">💧</span><span class="part">空氣與水</span><br><span class="eg">保持濕潤但不能積水</span></div>
-                                    <div class="info-card" style="border-bottom-color: #8e44ad;"><span class="emoji">🌱</span><span class="part">土壤養分</span><br><span class="eg">提供長大的肥料</span></div>
+                                    <div class="info-card" style="border-bottom-color: #f1c40f;"><span class="emoji">☀️</span><span class="part">陽光</span><br><span class="eg">幫助製造食物</span></div>
+                                    <div class="info-card" style="border-bottom-color: #3498db;"><span class="emoji">💧</span><span class="part">空氣與水</span><br><span class="eg">保持濕潤不積水</span></div>
+                                    <div class="info-card" style="border-bottom-color: #8e44ad;"><span class="emoji">🌱</span><span class="part">土壤養分</span><br><span class="eg">長大的肥料</span></div>
                                 </div>
                             </div>
                         `,
                         "lessonHTML": `
                             <h3>☀️ 植物的魔法三大法寶</h3>
-                            <p>如果你想當一個厲害的小農夫，一定要知道植物長大需要的三個魔法寶物：</p>
+                            <p>想當一個厲害的小農夫，一定要知道植物長大需要的三個魔法寶物：</p>
                             <ul>
-                                <li>第一寶：<span class="keyword">陽光</span>。植物的葉子像太陽能板，曬太陽就能自己製造食物，如果沒有陽光，植物會變得黃黃瘦瘦的。</li>
-                                <li>第二寶：<span class="keyword">空氣和水</span>。土壤要保持微濕，但盆子底下一定要有洞！如果水太多排不出去，植物的根會因為不能呼吸而爛掉。</li>
-                                <li>第三寶：<span class="keyword">土壤與養分</span>。植物在發芽前，會吃「種子」裡面自帶的便當；但長大後，就需要吸收土壤裡的養分（肥料）才會長得又高又壯。</li>
+                                <li>第一寶：<span class="keyword">陽光</span>。植物的葉子像太陽能板，曬太陽就能自己製造食物。</li>
+                                <li>第二寶：<span class="keyword">空氣和水</span>。土壤要保持微濕，但盆子底下一定要有洞！不然根會因為不能呼吸而爛掉。</li>
+                                <li>第三寶：<span class="keyword">土壤與養分</span>。植物發芽前吃「種子」自帶的便當；長大後就需要吸收土壤裡的肥料。</li>
                             </ul>
                         `,
                         "applicationText": `
                             <h3>🤔 腦力激盪：小小思辨家</h3>
                             <div class="think-box">
                                 <strong>情境：黑暗中的豆芽菜</strong><br>
-                                我們說植物需要「陽光」才會長得好、綠油油的。可是，你有沒有吃過「豆芽菜」？它長得白白胖胖的，而且是在「沒有陽光」的暗房裡種出來的喔！<br><br>
-                                <strong>👉 想一想：</strong>為什麼豆芽菜不用曬太陽也能長大？它的養分是從哪裡來的呢？（提示：觀察一下豆芽菜最下面那一顆黃黃的豆子！）
+                                我們說植物需要「陽光」才會綠油油的。可是豆芽菜長得白白胖胖的，而且是在「沒有陽光」的暗房裡種出來的喔！<br><br>
+                                <strong>👉 想一想：</strong>為什麼豆芽菜不用曬太陽也能長大？它的養分從哪來？
                             </div>
                             <div class="hover-reveal">
                                 <div class="answer-text">
-                                    💡 解答：因為豆芽菜還在「發芽初期」！它靠著底部那一顆大大的「黃豆或綠豆」裡面自帶的養分（就像帶了便當）就能長大。等便當吃完，它就必須要去曬太陽才能繼續生存了。
+                                    💡 解答：因為豆芽菜還在「發芽初期」！它靠著底部那一顆大大的「豆子」裡面自帶的養分就能長大。
                                 </div>
                             </div>
                         `
@@ -277,58 +280,190 @@
                             <div class="infographic">
                                 <h4 style="margin:0; color:#2c3e50;">💡 學習圖解：蔬菜的一生</h4>
                                 <div class="timeline">
-                                    <div class="timeline-step"><span class="emoji">🌰</span><span class="part">1. 播種</span></div>
+                                    <div class="timeline-step"><span class="emoji">🌰</span><span class="part">播種</span></div>
                                     <div class="timeline-arrow">➔</div>
-                                    <div class="timeline-step"><span class="emoji">🌱</span><span class="part">2. 發芽</span></div>
+                                    <div class="timeline-step"><span class="emoji">🌱</span><span class="part">發芽</span></div>
                                     <div class="timeline-arrow">➔</div>
-                                    <div class="timeline-step"><span class="emoji">🌿</span><span class="part">3. 長葉</span></div>
+                                    <div class="timeline-step"><span class="emoji">🌿</span><span class="part">長葉</span></div>
                                     <div class="timeline-arrow">➔</div>
-                                    <div class="timeline-step"><span class="emoji">🌼</span><span class="part">4. 開花結果</span></div>
+                                    <div class="timeline-step"><span class="emoji">🌼</span><span class="part">開花結果</span></div>
                                 </div>
                             </div>
                         `,
                         "lessonHTML": `
                             <h3>🌱 蔬菜的一生：從種子到大樹</h3>
-                            <p>種菜就像照顧小寶寶一樣，它們會經歷神奇的變化：</p>
+                            <p>種菜會經歷神奇的變化：</p>
                             <ol>
                                 <li><span class="keyword">播種</span>：把種子埋進鬆軟的土裡。</li>
-                                <li><span class="keyword">發芽</span>：種子吸飽水後，會先長出往下鑽的「根」，再長出往上頂的「莖和葉子」。</li>
-                                <li><span class="keyword">長葉與疏苗</span>：葉子越長越多。如果苗長得太擠，我們要拔掉一些比較弱小的苗，這叫做「疏苗」，讓剩下的植物有更多空間長大。</li>
-                                <li><span class="keyword">開花與結果</span>：長大後會開出美麗的花，花謝了之後就會結出果實和新的種子！</li>
+                                <li><span class="keyword">發芽</span>：先長出往下鑽的「根」，再長出往上頂的「莖和葉子」。</li>
+                                <li><span class="keyword">長葉與疏苗</span>：如果苗長得太擠，我們要拔掉一些比較弱小的苗，這叫做「疏苗」。</li>
+                                <li><span class="keyword">開花與結果</span>：長大後開花，花謝了結出果實和新種子！</li>
                             </ol>
-                            <p>記得喔！觀察植物時，可以用「方格紙」來量葉子的大小，或是用「尺」來量高度，這樣才是厲害的科學家！</p>
                         `,
                         "applicationText": `
                             <h3>🤔 腦力激盪：小小思辨家</h3>
                             <div class="think-box">
                                 <strong>情境：為什麼要「拔掉」健康的小苗？</strong><br>
-                                在種菜時，如果同一個盆子裡長出太多小苗，農夫會狠心地進行「疏苗」，把一些看起來也很健康的小苗直接拔掉。<br><br>
-                                <strong>👉 想一想：</strong>如果不拔掉它們，讓大家一起擠在盆子裡長大，最後會發生什麼事？
+                                盆子裡長出太多小苗時，農夫會進行「疏苗」，把一些看起來也很健康的苗直接拔掉。<br><br>
+                                <strong>👉 想一想：</strong>如果不拔掉它們，最後會發生什麼事？
                             </div>
                             <div class="hover-reveal">
                                 <div class="answer-text">
-                                    💡 解答：如果大家擠在一起，泥土裡的「養分」和「水分」就會不夠分，而且互相遮擋「陽光」。最後全部的苗都會長得又矮又瘦！所以必須犧牲一些，讓留下來的苗有足夠空間長成大蔬菜。
+                                    💡 解答：如果大家擠在一起，泥土裡的「養分」和「水分」就會不夠分。最後全部的苗都會長得又矮又瘦！
                                 </div>
                             </div>
                         `
                     }
                 ],
                 "questions": [
-                    { id: 1, q: "種菜的第一步通常是什麼？", options: ["播種", "鬆土", "施肥", "收成"], ans: 1, exp: "鬆土可以讓土壤變得鬆軟透氣，有利於種子發芽和根部生長。" },
-                    { id: 2, q: "種子發芽初期通常「不需要」下列哪一個條件？", options: ["水分", "空氣", "適當的溫度", "肥料"], ans: 3, exp: "發芽初期依靠種子本身的養分，還不需要施加肥料喔。" },
-                    { id: 3, q: "使用花盆種菜時，為什麼花盆底部要有洞？", options: ["為了好看", "讓多餘的水流出避免根爛掉", "讓蚯蚓跑進去", "減輕花盆重量"], ans: 1, exp: "底部有洞幫助排水，積水太多植物的根會無法呼吸而爛掉。" },
-                    { id: 4, q: "觀察蔬菜生長時，我們可以用什麼工具來記錄葉子的大小？", options: ["溫度計", "方格紙", "放大鏡", "滴管"], ans: 1, exp: "放在方格紙上描繪輪廓，可以清楚算出葉子變大了多少格。" },
-                    { id: 5, q: "我們常吃的「小白菜」主要是植物的哪個部位？", options: ["根", "莖", "葉", "果實"], ans: 2, exp: "小白菜我們主要是吃它綠色的葉片部分。" },
-                    { id: 6, q: "我們常吃的「胡蘿蔔」主要是植物的哪個部位？", options: ["根", "莖", "葉", "果實"], ans: 0, exp: "胡蘿蔔是儲存滿滿養分的地下根。" },
-                    { id: 7, q: "如果發現蔬菜的葉子上有許多破洞，最可能是什麼原因？", options: ["太陽太大曬破的", "被菜蟲咬的", "水澆太多", "風吹破的"], ans: 1, exp: "葉子上的破洞通常是毛毛蟲等昆蟲啃食造成的。" },
-                    { id: 8, q: "當蔬菜長得太擁擠時，為什麼要進行「疏苗」？", options: ["讓剩下的苗有更多生長空間", "為了讓花盆變輕", "為了讓土壤變少", "讓蟲子沒東西吃"], ans: 0, exp: "減少競爭，讓留下來的小苗長得更好。" },
-                    { id: 9, q: "種植攀緣植物（例如絲瓜）時，我們需要幫它準備什麼？", options: ["很大的水桶", "支架或網子讓它攀爬", "黑布蓋住", "保暖的燈"], ans: 1, exp: "莖比較軟，需要依靠支架才能向上生長吸收陽光。" },
-                    { id: 10, q: "下列哪一種植物適合在陽台種植，且生長週期較短？", options: ["蘋果樹", "小白菜", "高山茶", "稻米"], ans: 1, exp: "小白菜大約一個月左右就能收成，適合觀察種植。" },
-                    { id: 11, q: "記錄植物生長時，下列哪一項「不是」必要的科學紀錄項目？", options: ["測量日期", "植物的高度", "葉子的數量", "今天晚餐吃什麼"], ans: 3, exp: "科學紀錄要專注於植物本身的變化以及天氣、澆水等變因。" },
-                    { id: 12, q: "關於澆水的觀念，哪一個是正確的？", options: ["每天都要澆一大桶水", "觀察土壤表面微乾時再澆水", "只能在中午大太陽時澆水", "只要噴溼葉子就好"], ans: 1, exp: "澆水要看土壤濕度，並且要澆透，中午大太陽澆水容易讓植物受傷。" },
-                    { id: 13, q: "蔬菜收成後，剩下的菜葉或菜根可以怎麼處理最環保？", options: ["直接丟垃圾桶", "沖進馬桶裡", "製作成堆肥變回土壤養分", "燒掉"], ans: 2, exp: "落葉、菜根都可以做成有機堆肥，這是大自然循環的一部分。" },
-                    { id: 14, q: "植物的「根」通常有什麼主要功能？", options: ["吸收陽光", "吸收水分並固定植物", "開花結果", "吸引蝴蝶採蜜"], ans: 1, exp: "根負責喝水並抓緊土壤。" },
-                    { id: 15, q: "植物的生長通常會經歷什麼過程？", options: ["結果、開花、發芽", "發芽、長葉、開花、結果", "長葉、結果、發芽", "開花、發芽、結果"], ans: 1, exp: "種子會先發芽長葉，成熟後開花，最後結出果實與種子。" }
+                    { id: 101, q: "種菜的第一步通常是什麼？", options: ["播種", "鬆土", "施肥", "收成"], ans: 1, exp: "鬆土可以讓土壤變得鬆軟透氣，有利於發芽。" },
+                    { id: 102, q: "種子發芽初期通常「不需要」哪一個條件？", options: ["水分", "空氣", "適當溫度", "肥料"], ans: 3, exp: "發芽初期依靠種子本身的養分，還不需要施加肥料。" },
+                    { id: 103, q: "為什麼花盆底部要有洞？", options: ["為了好看", "讓多餘的水流出", "讓蚯蚓進去", "減輕重量"], ans: 1, exp: "底部有洞幫助排水，積水太多植物的根會無法呼吸而爛掉。" },
+                    { id: 104, q: "我們可以用什麼工具來記錄葉子的大小？", options: ["溫度計", "方格紙", "放大鏡", "滴管"], ans: 1, exp: "放在方格紙上描繪輪廓，可以清楚算出變大了多少格。" },
+                    { id: 105, q: "我們常吃的「小白菜」主要是植物的哪個部位？", options: ["根", "莖", "葉", "果實"], ans: 2, exp: "小白菜我們主要是吃它綠色的葉片。" },
+                    { id: 106, q: "我們常吃的「胡蘿蔔」主要是植物的哪個部位？", options: ["根", "莖", "葉", "果實"], ans: 0, exp: "胡蘿蔔是儲存滿滿養分的地下根。" },
+                    { id: 107, q: "葉子上有許多破洞，最可能是什麼原因？", options: ["太陽曬破的", "被菜蟲咬的", "水澆太多", "風吹破的"], ans: 1, exp: "通常是毛毛蟲等昆蟲啃食造成的。" },
+                    { id: 108, q: "當蔬菜長得太擁擠時，為什麼要「疏苗」？", options: ["讓剩下的苗有更多空間", "為了讓花盆變輕", "為了減少土壤", "讓蟲子沒東西吃"], ans: 0, exp: "減少競爭，讓留下來的小苗長得更好。" },
+                    { id: 109, q: "種植絲瓜等攀緣植物時，需要準備什麼？", options: ["大水桶", "支架或網子", "黑布", "保暖燈"], ans: 1, exp: "莖比較軟，需要依靠支架才能向上生長。" },
+                    { id: 110, q: "哪種植物適合在陽台種植，且生長週期短？", options: ["蘋果樹", "小白菜", "高山茶", "稻米"], ans: 1, exp: "小白菜約一個月就能收成。" },
+                    { id: 111, q: "記錄植物生長時，哪一項「不是」必要的？", options: ["測量日期", "植物的高度", "葉子的數量", "今天晚餐吃什麼"], ans: 3, exp: "科學紀錄要專注於植物本身的變化。" },
+                    { id: 112, q: "澆水的正確觀念是什麼？", options: ["每天澆一大桶水", "土壤表面微乾時再澆", "在中午大太陽澆", "噴溼葉子就好"], ans: 1, exp: "澆水要看土壤濕度，並且要澆透。" },
+                    { id: 113, q: "剩下的菜葉可以怎麼處理最環保？", options: ["直接丟垃圾桶", "沖進馬桶", "製作成堆肥", "燒掉"], ans: 2, exp: "可以做成有機堆肥變回土壤養分。" },
+                    { id: 114, q: "植物的「根」有什麼主要功能？", options: ["吸收陽光", "吸收水分並固定", "開花結果", "吸引蝴蝶"], ans: 1, exp: "根負責喝水並抓緊土壤。" },
+                    { id: 115, q: "植物生長通常會經歷什麼過程？", options: ["結果、開花、發芽", "發芽、長葉、開花、結果", "長葉、結果、發芽", "開花、發芽、結果"], ans: 1, exp: "先發芽長葉，成熟後開花，最後結出果實。" }
+                ]
+            },
+            
+            // ==================== 第二單元 ====================
+            "unit2": {
+                "unitTitle": "第二單元：溫度變化對物質的影響",
+                "sections": [
+                    {
+                        "chapterTitle": "【2-1】 什麼因素會影響物質變化",
+                        "infographicHTML": `
+                            <br>
+                            <div class="infographic">
+                                <h4 style="margin:0; color:#2c3e50;">💡 學習圖解：讓物質變身的魔法力量</h4>
+                                <div class="info-grid">
+                                    <div class="info-card" style="border-bottom-color: #e74c3c;"><span class="emoji">🌡️</span><span class="part">溫度改變</span><br><span class="eg">冰塊受熱融化</span></div>
+                                    <div class="info-card" style="border-bottom-color: #95a5a6;"><span class="emoji">🔨</span><span class="part">施加外力</span><br><span class="eg">黏土被捏成不同形狀</span></div>
+                                    <div class="info-card" style="border-bottom-color: #3498db;"><span class="emoji">💧</span><span class="part">加入水中</span><br><span class="eg">食鹽溶化在水裡</span></div>
+                                </div>
+                            </div>
+                        `,
+                        "lessonHTML": `
+                            <h3>🪄 物質的變身術</h3>
+                            <p>在我們身邊的物品（物質），有時候會改變它們的形狀或狀態。有三大魔法力量可以讓它們變身：</p>
+                            <ul>
+                                <li><span class="keyword">溫度的改變</span>：這是最常見的魔法！東西變熱（受熱）或變冷（遇冷），狀態就會改變。例如：冰淇淋離開冰箱後，因為吸收空氣中的熱量，就會漸漸融化。</li>
+                                <li><span class="keyword">外力</span>：用力捏、壓、拉，可以改變物體的形狀，就像把紙揉成一團。</li>
+                                <li><span class="keyword">溶於水</span>：有些東西放進水裡會不見，這叫做「溶解」，例如方糖泡進紅茶裡。</li>
+                            </ul>
+                        `,
+                        "applicationText": `
+                            <h3>🤔 腦力激盪：小小思辨家</h3>
+                            <div class="think-box">
+                                <strong>情境：口袋裡的巧克力</strong><br>
+                                小明把一塊硬梆梆的巧克力放進褲子口袋裡，開心地跑去操場玩。過了半小時，他想把巧克力拿出來吃，卻發現口袋變得黏呼呼的！<br><br>
+                                <strong>👉 想一想：</strong>小明明明沒有帶打火機或吹風機，為什麼口袋裡的巧克力會「融化」呢？熱量是從哪裡來的？
+                            </div>
+                            <div class="hover-reveal">
+                                <div class="answer-text">
+                                    💡 解答：熱量是從「小明的身體」傳出來的！人體的溫度大約是 36 度，比硬梆梆巧克力的融點還要高。巧克力吸收了身體的體溫（受熱），就融化變成液體了。
+                                </div>
+                            </div>
+                        `
+                    },
+                    {
+                        "chapterTitle": "【2-2】 溫度改變對水有哪些變化",
+                        "infographicHTML": `
+                            <br>
+                            <div class="infographic">
+                                <h4 style="margin:0; color:#2c3e50;">💡 學習圖解：水的三態變化</h4>
+                                <div class="timeline">
+                                    <div class="timeline-step" style="border-color:#3498db;"><span class="emoji">🧊</span><span class="part">固態 (冰)</span><br><span style="font-size:0.8em">低於 0°C</span></div>
+                                    <div class="timeline-arrow">♨️受熱➔<br>❄️遇冷🡠</div>
+                                    <div class="timeline-step" style="border-color:#2980b9;"><span class="emoji">💧</span><span class="part">液態 (水)</span><br><span style="font-size:0.8em">常溫</span></div>
+                                    <div class="timeline-arrow">♨️受熱➔<br>❄️遇冷🡠</div>
+                                    <div class="timeline-step" style="border-color:#bdc3c7;"><span class="emoji">☁️</span><span class="part">氣態 (水蒸氣)</span><br><span style="font-size:0.8em">達到 100°C</span></div>
+                                </div>
+                            </div>
+                        `,
+                        "lessonHTML": `
+                            <h3>💧 百變水精靈：水的三種型態</h3>
+                            <p>水是地球上最神奇的物質，它會因為溫度的不同，出現三種完全不同的長相（三態）：</p>
+                            <ul>
+                                <li><span class="keyword">固態（冰）</span>：當溫度非常冷，降到 <strong>0°C（冰點）</strong>時，水就會結冰，變得硬梆梆的，這叫做「凝固」。</li>
+                                <li><span class="keyword">液態（水）</span>：平常我們喝的水。如果把冰塊拿出來放著，它受熱變成液態水，這叫做「融化」。</li>
+                                <li><span class="keyword">氣態（水蒸氣）</span>：當水被加熱到 <strong>100°C（沸點）</strong>，水會一直冒泡泡並變成看不見的氣體跑到空氣中，這叫做「沸騰」或「蒸發」。</li>
+                            </ul>
+                        `,
+                        "applicationText": `
+                            <h3>🤔 腦力激盪：小小思辨家</h3>
+                            <div class="think-box">
+                                <strong>情境：杯子流汗了？</strong><br>
+                                夏天時，從冰箱拿出一瓶冰冰涼涼的可樂倒進玻璃杯裡。過了一下子，玻璃杯的「外面」竟然出現了好多小水滴，看起來就像杯子在流汗一樣！<br><br>
+                                <strong>👉 想一想：</strong>玻璃杯明明沒有破洞，裡面的可樂也沒有跑出來，那杯子外面的水滴到底是從哪裡來的呢？
+                            </div>
+                            <div class="hover-reveal">
+                                <div class="answer-text">
+                                    💡 解答：這是因為空氣中本來就充滿看不見的「水蒸氣」。當熱熱的水蒸氣碰到冰冷的玻璃杯面時，就會「遇冷」變成液態的小水滴附著在杯子上。這個過程叫做「凝結」喔！
+                                </div>
+                            </div>
+                        `
+                    },
+                    {
+                        "chapterTitle": "【2-3】 溫度改變對其他物質有什麼影響",
+                        "infographicHTML": `
+                            <br>
+                            <div class="infographic">
+                                <h4 style="margin:0; color:#2c3e50;">💡 學習圖解：可逆與不可逆變化</h4>
+                                <div class="info-grid">
+                                    <div class="info-card" style="border-bottom-color: #27ae60;"><span class="emoji">🔄</span><span class="part">可逆變化</span><br><span class="eg">冰融化成水，還能再凍成冰</span></div>
+                                    <div class="info-card" style="border-bottom-color: #e74c3c;"><span class="emoji">🚫</span><span class="part">不可逆變化</span><br><span class="eg">生米煮成熟飯，回不去了</span></div>
+                                    <div class="info-card" style="border-bottom-color: #f39c12;"><span class="emoji">📏</span><span class="part">熱脹冷縮</span><br><span class="eg">金屬受熱會變大一點點</span></div>
+                                </div>
+                            </div>
+                        `,
+                        "lessonHTML": `
+                            <h3>🍳 回不去的神奇化學變化</h3>
+                            <p>除了水以外，溫度也會對其他物質施展魔法！有些魔法是「變不回來」的：</p>
+                            <ul>
+                                <li><span class="keyword">不可逆變化（化學變化）</span>：很多食物受熱後，性質會完全改變，而且再也無法恢復原狀！例如：透明的生蛋白煎熟後變成白色的固體、玉米加熱爆成爆米花。就算把它們放回冰箱，也變不回生蛋和玉米粒了。</li>
+                                <li><span class="keyword">熱脹冷縮現象</span>：很多物體（尤其是金屬和氣體）在受熱時體積會稍微「膨脹變大」，遇冷時會「收縮變小」。</li>
+                            </ul>
+                        `,
+                        "applicationText": `
+                            <h3>🤔 腦力激盪：小小思辨家</h3>
+                            <div class="think-box">
+                                <strong>情境：鐵軌中間的神秘小縫隙</strong><br>
+                                火車在鐵軌上跑的時候，總是會發出「喀勒、喀勒」的聲音。如果你仔細觀察，會發現很長的鐵軌，其實不是緊緊連在一起的，每一小段鐵軌之間都會故意留下一道「小縫隙」。<br><br>
+                                <strong>👉 想一想：</strong>工程師為什麼不把鐵軌鋪得密密的就好？故意留這個小縫隙有什麼重要的功用呢？
+                            </div>
+                            <div class="hover-reveal">
+                                <div class="answer-text">
+                                    💡 解答：因為金屬有「熱脹冷縮」的特性！夏天天氣非常熱的時候，鐵軌受熱體積會膨脹伸長。如果沒有預留縫隙，鐵軌伸長時就會互相擠壓到變形彎曲，火車開過去就會非常危險！
+                                </div>
+                            </div>
+                        `
+                    }
+                ],
+                "questions": [
+                    { id: 201, q: "冰塊放在室溫下會慢慢變成水，是因為發生了什麼事？", options: ["遇冷凝結", "受熱融化", "水分蒸發", "熱脹冷縮"], ans: 1, exp: "冰塊吸收了周圍空氣的熱量，所以從固態融化成液態。" },
+                    { id: 202, q: "水在溫度降到幾度時，會開始結成冰？", options: ["100°C", "50°C", "25°C", "0°C"], ans: 3, exp: "0°C 是水的冰點，低於這個溫度液態水就會凝固成固態的冰。" },
+                    { id: 203, q: "將一杯水放在太陽底下，幾天後水變少了，這是什麼現象？", options: ["凝固", "融化", "蒸發", "沸騰"], ans: 2, exp: "水在常溫下吸收熱量，慢慢變成氣態的水蒸氣散失到空氣中，這叫做蒸發。" },
+                    { id: 204, q: "空氣中的水蒸氣遇到冰冷的玻璃杯面，變成小水滴附著在上面，這叫做什麼？", options: ["凝固", "凝結", "融化", "沸騰"], ans: 1, exp: "氣態的水蒸氣遇冷變成液態的水，這個過程稱為凝結。" },
+                    { id: 205, q: "下列哪一種狀態的水是「氣態」的？", options: ["冰塊", "自來水", "水蒸氣", "冰水"], ans: 2, exp: "水蒸氣是水受熱後變成看不見的氣體狀態。" },
+                    { id: 206, q: "把水加熱到沸騰不斷冒泡時，溫度大約是幾度？", options: ["0°C", "50°C", "100°C", "200°C"], ans: 2, exp: "在一般氣壓下，水的沸點大約是 100°C。" },
+                    { id: 207, q: "下列哪一種物質的變化，冷卻後「無法」恢復原來的樣子（不可逆變化）？", options: ["冰塊融化成水", "巧克力受熱變軟", "生雞蛋煎成荷包蛋", "奶油受熱融化"], ans: 2, exp: "生雞蛋受熱煮熟後，蛋白質發生了改變，就算放進冰箱也無法變回生雞蛋。" },
+                    { id: 208, q: "將生米加水放入電鍋煮成熟飯，這是受到什麼因素影響產生的變化？", options: ["加水溶解", "受熱產生變化", "用力擠壓", "遇冷產生變化"], ans: 1, exp: "電鍋加熱產生的高溫，讓生米煮熟變成米飯，這是一種不可逆的熱變化。" },
+                    { id: 209, q: "鐵軌之間會預留縫隙，是為了防止夏天發生什麼現象而導致鐵軌變形？", options: ["熱脹", "冷縮", "融化", "生鏽"], ans: 0, exp: "金屬受熱體積會變大（熱脹），預留縫隙才有空間讓它伸展而不互相擠壓變形。" },
+                    { id: 210, q: "哪一種情況是因為「外力」而改變了物體的形狀？", options: ["冰棒融化", "把紙揉成一團", "玉米變成爆米花", "糖溶在水裡"], ans: 1, exp: "用手捏、揉就是施加外力，改變了紙張原本平整的形狀。" },
+                    { id: 211, q: "將一匙食鹽倒進水裡攪拌後看不見了，這是發生了什麼現象？", options: ["融化", "溶解", "蒸發", "凝結"], ans: 1, exp: "固體物質均勻混合在液體中看不見，科學上稱為溶解（融化是指受熱變液體喔！）。" },
+                    { id: 212, q: "打不開果醬的金屬瓶蓋時，如果用熱水沖一下金屬蓋子就會比較好開，這是應用了什麼原理？", options: ["熱脹冷縮", "溶解", "蒸發", "凝固"], ans: 0, exp: "金屬蓋子受熱會稍微膨脹（變大一點點），所以就會變得比較鬆、好轉開。" },
+                    { id: 213, q: "關於水的三態，下列哪一個敘述是「錯誤」的？", options: ["冰是固態的水", "水蒸氣是看得見的白煙", "水在常溫下是液態", "冰受熱會融化成水"], ans: 1, exp: "水蒸氣是『看不見』的氣體！我們看到的熱水白煙，其實是水蒸氣遇冷凝結成的『小水滴』喔！" },
+                    { id: 214, q: "冬天說話時嘴巴會吐出「白煙」，這陣白煙其實是什麼？", options: ["二氧化碳氣體", "小冰塊", "微小的液態小水滴", "灰塵"], ans: 2, exp: "嘴巴呼出的熱水蒸氣，遇到外面冰冷的空氣，瞬間『凝結』成許多漂浮在空中的小水滴。" },
+                    { id: 215, q: "把巧克力放在手心一陣子會變得軟軟黏黏的，熱量是從哪裡來的？", options: ["太陽", "空氣", "手心的體溫", "巧克力自己發熱"], ans: 2, exp: "人體的體溫大約有36度，這股熱量傳遞給巧克力，讓它受熱融化了。" }
                 ]
             }
         }
@@ -336,10 +471,13 @@
 
     let currentQuestions = [];
     let currentGrade = "grade3_term2";
-    let currentUnit = "unit1";
+    let currentUnit = "unit2"; // 預設改為第二單元，方便你直接測試
     let userMistakes = [];
 
     function loadCourse() {
+        currentGrade = document.getElementById('grade-select').value;
+        currentUnit = document.getElementById('unit-select').value;
+
         const unitData = knowledgeBase[currentGrade][currentUnit];
         if(!unitData) return;
 
@@ -349,7 +487,6 @@
         chaptersContainer.innerHTML = ""; 
         
         unitData.sections.forEach((sec, index) => {
-            // 【修正】：剔除含有 .hover-reveal 解答區塊的文字，不讓語音唸出來
             let appTextForSpeech = sec.applicationText.replace(/<div class="hover-reveal">[\s\S]*?<\/div>/g, '');
             const rawText = (sec.chapterTitle + "。" + sec.lessonHTML + appTextForSpeech).replace(/<[^>]+>/g, ' ');
             window.speakData[`lesson_${index}`] = rawText;
@@ -383,7 +520,6 @@
         document.getElementById('score-display').innerText = '';
 
         currentQuestions.forEach((q, index) => {
-            // 【修正】：選項改成 1, 2, 3, 4
             let optionsHtml = q.options.map((opt, optIndex) => `
                 <label>
                     <input type="radio" name="q${index}" value="${optIndex}">
@@ -391,7 +527,6 @@
                 </label>
             `).join('');
 
-            // 【修正】：語音朗讀直接唸出 1、2、3、4
             window.speakData[`q_${index}`] = `第${index + 1}題：${q.q}。1：${q.options[0]}。2：${q.options[1]}。3：${q.options[2]}。4：${q.options[3]}`;
 
             container.innerHTML += `
@@ -428,7 +563,6 @@
                 feedbackEl.innerHTML = `✅ 答對了！<div class='explanation'>${q.exp}</div>`;
                 feedbackEl.className = "feedback show text-success";
             } else {
-                // 【修正】：顯示的正確答案也改成數字格式
                 feedbackEl.innerHTML = `❌ 答錯了。正確答案是：${q.ans + 1}。
                                         <div class='explanation'>💡 說明：${q.exp}</div>`;
                 feedbackEl.className = "feedback show text-danger";
@@ -464,7 +598,6 @@
         }
 
         container.innerHTML = userMistakes.map((q, index) => {
-            // 【修正】：錯題的語音與顯示都改為數字格式
             window.speakData[`mistake_${index}`] = `題目：${q.q}。正確答案是：${q.ans + 1}。說明：${q.exp}`;
             
             return `
@@ -483,13 +616,9 @@
         }).join('');
     }
 
-    // 【新增】：單獨移除一題錯題的函數
     function removeMistake(questionId) {
-        // 過濾掉 ID 吻合的那一題
         userMistakes = userMistakes.filter(q => q.id !== questionId);
-        // 更新到本地瀏覽器記憶中
         localStorage.setItem(`scienceMistakes_${currentGrade}_${currentUnit}`, JSON.stringify(userMistakes));
-        // 重新渲染畫面
         renderMistakes();
     }
 
@@ -501,6 +630,7 @@
         }
     }
 
+    // 啟動程式 (為了方便測試，一進入網頁會直接載入選單上的預設值)
     window.onload = loadCourse;
 </script>
 
