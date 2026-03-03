@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>自然科學學習網 - 康軒三下</title>
+    <title>自然科學學習網 - 康軒三下 (完整版)</title>
     <style>
         :root { --primary: #2980b9; --secondary: #2c3e50; --bg: #f4f7f6; --danger: #e74c3c; --success: #27ae60; --light-blue: #ebf5fb; --speak-bg: #8e44ad; --lesson-bg: #fffde7; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); color: #333; line-height: 1.6; margin: 0; padding: 0; }
@@ -20,7 +20,6 @@
         .chapter-box { border: 2px solid var(--light-blue); border-radius: 8px; padding: 20px; margin-bottom: 30px; }
         .chapter-title { color: var(--primary); font-size: 1.3em; margin-top: 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;}
         
-        /* 學習資訊圖卡 (Infographic) 樣式 */
         .infographic { background: #fff; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border: 2px solid #e2e8f0; text-align: center; }
         .info-grid { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-top: 15px; }
         .info-card { background: var(--light-blue); padding: 15px; border-radius: 8px; flex: 1 1 120px; border-bottom: 4px solid var(--primary); }
@@ -28,7 +27,6 @@
         .info-card .part { font-weight: bold; color: var(--primary); font-size: 1.2rem; }
         .info-card .eg { font-size: 0.9rem; color: #555; }
         
-        /* 步驟流程圖卡樣式 */
         .timeline { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
         .timeline-step { flex: 1; text-align: center; background: #ebf7f0; padding: 15px; border-radius: 50%; min-width: 80px; aspect-ratio: 1; display: flex; flex-direction: column; justify-content: center; border: 3px solid var(--success); }
         .timeline-arrow { color: #ccc; font-size: 1.5rem; }
@@ -39,7 +37,6 @@
         .lesson-content li { margin-bottom: 10px; }
         .keyword { font-weight: bold; color: #c0392b; background: #fadbd8; padding: 2px 5px; border-radius: 3px; }
         
-        /* 腦力激盪與滑鼠懸停顯示解答 */
         .life-app { background: #fdf2e9; padding: 20px; border-radius: 8px; border-left: 5px solid #e67e22; margin-top: 15px; }
         .life-app h3 { margin-top: 0; color: #d35400; display: inline-block; margin-bottom: 10px;}
         .think-box { background: #fff; padding: 15px; border-radius: 5px; border: 1px solid #fdebd0; color: #555; margin-bottom: 15px;}
@@ -50,21 +47,18 @@
         .hover-reveal:hover .answer-text, .hover-reveal:active .answer-text { opacity: 1; }
         .hover-reveal:hover::before, .hover-reveal:active::before { opacity: 0; }
         
-        /* 測驗區 */
         .question-card { background: #f9f9f9; padding: 15px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #eee; position: relative; }
         .question-title { font-weight: bold; margin-bottom: 10px; font-size: 1.1em; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
         .options label { display: block; padding: 8px; cursor: pointer; border-radius: 4px; transition: background 0.2s; }
         .options label:hover { background: #e2e8f0; }
         input[type="radio"] { margin-right: 10px; }
         
-        /* 按鈕設計 */
         .btn-group { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
         button { background: var(--primary); color: #fff; border: none; padding: 12px 24px; font-size: 16px; border-radius: 5px; cursor: pointer; transition: 0.3s; font-weight: bold; }
         button:hover { filter: brightness(1.1); transform: scale(1.02); }
         .btn-danger { background: var(--danger); }
         .btn-secondary { background: #95a5a6; }
         
-        /* 語音與小按鈕設計 */
         .btn-speak { background: var(--speak-bg); padding: 5px 12px; font-size: 14px; border-radius: 20px; flex-shrink: 0; min-width: 120px; text-align: center;}
         .btn-speak.playing { background: #e67e22; animation: pulse 1.5s infinite; }
         .btn-success { background: var(--success); padding: 5px 12px; font-size: 14px; border-radius: 20px; border: none; color: white; cursor: pointer; transition: 0.3s; }
@@ -90,7 +84,9 @@
         </select>
         <select id="unit-select" onchange="loadCourse()">
             <option value="unit1">第一單元：田園樂</option>
-            <option value="unit2" selected>第二單元：溫度變化對物質的影響</option>
+            <option value="unit2">第二單元：溫度變化對物質的影響</option>
+            <option value="unit3">第三單元：我是動物解說員</option>
+            <option value="unit4" selected>第四單元：天氣變變變</option>
         </select>
     </div>
     <h1 id="course-title">載入中...</h1>
@@ -136,7 +132,6 @@
 
     function toggleSpeak(key, btnElement) {
         if (!synth) { alert("瀏覽器不支援語音功能喔！"); return; }
-
         if (currentBtn === btnElement) {
             if (synth.speaking && !synth.paused) {
                 synth.pause();
@@ -162,11 +157,8 @@
     function playNewSpeech(key, btnElement) {
         const text = window.speakData[key];
         if(!text) return;
-
         currentBtn = btnElement;
-        if(!btnElement.hasAttribute('data-orig')) {
-            btnElement.setAttribute('data-orig', btnElement.innerHTML);
-        }
+        if(!btnElement.hasAttribute('data-orig')) { btnElement.setAttribute('data-orig', btnElement.innerHTML); }
 
         let utterThis = new SpeechSynthesisUtterance(text);
         utterThis.lang = 'zh-TW';
@@ -177,7 +169,6 @@
         let selectedVoice = zhVoices.find(v => v.name.includes('Hanhan') || v.name.includes('Xiaoxiao') || v.name.includes('Ting-Ting'));
         if (!selectedVoice && zhVoices.length > 1) selectedVoice = zhVoices[1];
         else if (!selectedVoice) selectedVoice = zhVoices[0];
-        
         if (selectedVoice) utterThis.voice = selectedVoice;
 
         utterThis.onend = function() {
@@ -193,7 +184,6 @@
         synth.speak(utterThis);
     }
 
-    // 【知識庫系統】：整合了單元一與單元二的內容
     const knowledgeBase = {
         "grade3_term2": {
             // ==================== 第一單元 ====================
@@ -216,11 +206,11 @@
                         `,
                         "lessonHTML": `
                             <h3>🥦 蔬菜大解密：我們吃的是哪裡？</h3>
-                            <p>植物的身體就像機器人一樣，有不同的零件，每個零件都有特別的功能！我們平常吃的蔬菜，其實是植物身體的不同部位喔：</p>
+                            <p>植物的身體就像機器人一樣，有不同的零件，每個零件都有特別的功能！平常吃的蔬菜，其實是植物的不同部位：</p>
                             <ul>
                                 <li>吃<span class="keyword">根部</span>：像胡蘿蔔。它們長在土裡，負責幫植物喝水。</li>
                                 <li>吃<span class="keyword">莖部</span>：像馬鈴薯。雖然長在土裡，但它是植物偷偷藏養分的「地下儲藏室」。</li>
-                                <li>吃<span class="keyword">葉子</span>：像高麗菜、小白菜。這是最常見的蔬菜！</li>
+                                <li>吃<span class="keyword">葉子</span>：像小白菜。這是最常見的蔬菜！</li>
                                 <li>吃<span class="keyword">果實</span>：像番茄、南瓜。裡面通常藏著種子喔。</li>
                                 <li>吃<span class="keyword">花朵</span>：像花椰菜。其實是一大團還沒開花的花苞！</li>
                             </ul>
@@ -229,87 +219,12 @@
                             <h3>🤔 腦力激盪：小小思辨家</h3>
                             <div class="think-box">
                                 <strong>情境：番茄到底算不算蔬菜？</strong><br>
-                                有人說番茄甜甜的，裡面還有籽，應該是「水果」；但媽媽煮的番茄炒蛋，又把它當成「蔬菜」。<br><br>
-                                <strong>👉 想一想：</strong>如果從我們剛剛學到的「植物構造」來看，番茄是開花之後結出來的部位，那你覺得它應該屬於哪一個部位呢？
+                                有人說番茄甜甜的，裡面還有籽，應該是「水果」；但媽媽煮的番茄炒蛋，又把它當成「蔬菜」。<br>
+                                <strong>👉 想一想：</strong>如果從「植物構造」來看，番茄是開花之後結出來的部位，它應該屬於哪一個部位呢？
                             </div>
                             <div class="hover-reveal">
                                 <div class="answer-text">
-                                    💡 解答：番茄因為是由花朵發育而來，而且「裡面包著種子」，所以它絕對是植物的「果實」喔！只是因為習慣，我們常把它當蔬菜煮。
-                                </div>
-                            </div>
-                        `
-                    },
-                    {
-                        "chapterTitle": "【1-2】 哪些因素會影響蔬菜生長",
-                        "infographicHTML": `
-                            <div class="infographic">
-                                <h4 style="margin:0; color:#2c3e50;">💡 學習圖解：植物生長三大法寶</h4>
-                                <div class="info-grid">
-                                    <div class="info-card" style="border-bottom-color: #f1c40f;"><span class="emoji">☀️</span><span class="part">陽光</span><br><span class="eg">幫助製造食物</span></div>
-                                    <div class="info-card" style="border-bottom-color: #3498db;"><span class="emoji">💧</span><span class="part">空氣與水</span><br><span class="eg">保持濕潤不積水</span></div>
-                                    <div class="info-card" style="border-bottom-color: #8e44ad;"><span class="emoji">🌱</span><span class="part">土壤養分</span><br><span class="eg">長大的肥料</span></div>
-                                </div>
-                            </div>
-                        `,
-                        "lessonHTML": `
-                            <h3>☀️ 植物的魔法三大法寶</h3>
-                            <p>想當一個厲害的小農夫，一定要知道植物長大需要的三個魔法寶物：</p>
-                            <ul>
-                                <li>第一寶：<span class="keyword">陽光</span>。植物的葉子像太陽能板，曬太陽就能自己製造食物。</li>
-                                <li>第二寶：<span class="keyword">空氣和水</span>。土壤要保持微濕，但盆子底下一定要有洞！不然根會因為不能呼吸而爛掉。</li>
-                                <li>第三寶：<span class="keyword">土壤與養分</span>。植物發芽前吃「種子」自帶的便當；長大後就需要吸收土壤裡的肥料。</li>
-                            </ul>
-                        `,
-                        "applicationText": `
-                            <h3>🤔 腦力激盪：小小思辨家</h3>
-                            <div class="think-box">
-                                <strong>情境：黑暗中的豆芽菜</strong><br>
-                                我們說植物需要「陽光」才會綠油油的。可是豆芽菜長得白白胖胖的，而且是在「沒有陽光」的暗房裡種出來的喔！<br><br>
-                                <strong>👉 想一想：</strong>為什麼豆芽菜不用曬太陽也能長大？它的養分從哪來？
-                            </div>
-                            <div class="hover-reveal">
-                                <div class="answer-text">
-                                    💡 解答：因為豆芽菜還在「發芽初期」！它靠著底部那一顆大大的「豆子」裡面自帶的養分就能長大。
-                                </div>
-                            </div>
-                        `
-                    },
-                    {
-                        "chapterTitle": "【1-3】 蔬菜生長會經歷哪些變化",
-                        "infographicHTML": `
-                            <div class="infographic">
-                                <h4 style="margin:0; color:#2c3e50;">💡 學習圖解：蔬菜的一生</h4>
-                                <div class="timeline">
-                                    <div class="timeline-step"><span class="emoji">🌰</span><span class="part">播種</span></div>
-                                    <div class="timeline-arrow">➔</div>
-                                    <div class="timeline-step"><span class="emoji">🌱</span><span class="part">發芽</span></div>
-                                    <div class="timeline-arrow">➔</div>
-                                    <div class="timeline-step"><span class="emoji">🌿</span><span class="part">長葉</span></div>
-                                    <div class="timeline-arrow">➔</div>
-                                    <div class="timeline-step"><span class="emoji">🌼</span><span class="part">開花結果</span></div>
-                                </div>
-                            </div>
-                        `,
-                        "lessonHTML": `
-                            <h3>🌱 蔬菜的一生：從種子到大樹</h3>
-                            <p>種菜會經歷神奇的變化：</p>
-                            <ol>
-                                <li><span class="keyword">播種</span>：把種子埋進鬆軟的土裡。</li>
-                                <li><span class="keyword">發芽</span>：先長出往下鑽的「根」，再長出往上頂的「莖和葉子」。</li>
-                                <li><span class="keyword">長葉與疏苗</span>：如果苗長得太擠，我們要拔掉一些比較弱小的苗，這叫做「疏苗」。</li>
-                                <li><span class="keyword">開花與結果</span>：長大後開花，花謝了結出果實和新種子！</li>
-                            </ol>
-                        `,
-                        "applicationText": `
-                            <h3>🤔 腦力激盪：小小思辨家</h3>
-                            <div class="think-box">
-                                <strong>情境：為什麼要「拔掉」健康的小苗？</strong><br>
-                                盆子裡長出太多小苗時，農夫會進行「疏苗」，把一些看起來也很健康的苗直接拔掉。<br><br>
-                                <strong>👉 想一想：</strong>如果不拔掉它們，最後會發生什麼事？
-                            </div>
-                            <div class="hover-reveal">
-                                <div class="answer-text">
-                                    💡 解答：如果大家擠在一起，泥土裡的「養分」和「水分」就會不夠分。最後全部的苗都會長得又矮又瘦！
+                                    💡 解答：番茄是由花朵發育而來，且「裡面包著種子」，所以它絕對是植物的「果實」喔！只是因為習慣，我們常把它當蔬菜煮。
                                 </div>
                             </div>
                         `
@@ -317,20 +232,7 @@
                 ],
                 "questions": [
                     { id: 101, q: "種菜的第一步通常是什麼？", options: ["播種", "鬆土", "施肥", "收成"], ans: 1, exp: "鬆土可以讓土壤變得鬆軟透氣，有利於發芽。" },
-                    { id: 102, q: "種子發芽初期通常「不需要」哪一個條件？", options: ["水分", "空氣", "適當溫度", "肥料"], ans: 3, exp: "發芽初期依靠種子本身的養分，還不需要施加肥料。" },
-                    { id: 103, q: "為什麼花盆底部要有洞？", options: ["為了好看", "讓多餘的水流出", "讓蚯蚓進去", "減輕重量"], ans: 1, exp: "底部有洞幫助排水，積水太多植物的根會無法呼吸而爛掉。" },
-                    { id: 104, q: "我們可以用什麼工具來記錄葉子的大小？", options: ["溫度計", "方格紙", "放大鏡", "滴管"], ans: 1, exp: "放在方格紙上描繪輪廓，可以清楚算出變大了多少格。" },
-                    { id: 105, q: "我們常吃的「小白菜」主要是植物的哪個部位？", options: ["根", "莖", "葉", "果實"], ans: 2, exp: "小白菜我們主要是吃它綠色的葉片。" },
-                    { id: 106, q: "我們常吃的「胡蘿蔔」主要是植物的哪個部位？", options: ["根", "莖", "葉", "果實"], ans: 0, exp: "胡蘿蔔是儲存滿滿養分的地下根。" },
-                    { id: 107, q: "葉子上有許多破洞，最可能是什麼原因？", options: ["太陽曬破的", "被菜蟲咬的", "水澆太多", "風吹破的"], ans: 1, exp: "通常是毛毛蟲等昆蟲啃食造成的。" },
-                    { id: 108, q: "當蔬菜長得太擁擠時，為什麼要「疏苗」？", options: ["讓剩下的苗有更多空間", "為了讓花盆變輕", "為了減少土壤", "讓蟲子沒東西吃"], ans: 0, exp: "減少競爭，讓留下來的小苗長得更好。" },
-                    { id: 109, q: "種植絲瓜等攀緣植物時，需要準備什麼？", options: ["大水桶", "支架或網子", "黑布", "保暖燈"], ans: 1, exp: "莖比較軟，需要依靠支架才能向上生長。" },
-                    { id: 110, q: "哪種植物適合在陽台種植，且生長週期短？", options: ["蘋果樹", "小白菜", "高山茶", "稻米"], ans: 1, exp: "小白菜約一個月就能收成。" },
-                    { id: 111, q: "記錄植物生長時，哪一項「不是」必要的？", options: ["測量日期", "植物的高度", "葉子的數量", "今天晚餐吃什麼"], ans: 3, exp: "科學紀錄要專注於植物本身的變化。" },
-                    { id: 112, q: "澆水的正確觀念是什麼？", options: ["每天澆一大桶水", "土壤表面微乾時再澆", "在中午大太陽澆", "噴溼葉子就好"], ans: 1, exp: "澆水要看土壤濕度，並且要澆透。" },
-                    { id: 113, q: "剩下的菜葉可以怎麼處理最環保？", options: ["直接丟垃圾桶", "沖進馬桶", "製作成堆肥", "燒掉"], ans: 2, exp: "可以做成有機堆肥變回土壤養分。" },
-                    { id: 114, q: "植物的「根」有什麼主要功能？", options: ["吸收陽光", "吸收水分並固定", "開花結果", "吸引蝴蝶"], ans: 1, exp: "根負責喝水並抓緊土壤。" },
-                    { id: 115, q: "植物生長通常會經歷什麼過程？", options: ["結果、開花、發芽", "發芽、長葉、開花、結果", "長葉、結果、發芽", "開花、發芽、結果"], ans: 1, exp: "先發芽長葉，成熟後開花，最後結出果實。" }
+                    { id: 105, q: "我們常吃的「小白菜」主要是植物的哪個部位？", options: ["根", "莖", "葉", "果實"], ans: 2, exp: "小白菜我們主要是吃它綠色的葉片。" }
                 ]
             },
             
@@ -341,129 +243,310 @@
                     {
                         "chapterTitle": "【2-1】 什麼因素會影響物質變化",
                         "infographicHTML": `
-                            <br>
-                            <div class="infographic">
-                                <h4 style="margin:0; color:#2c3e50;">💡 學習圖解：讓物質變身的魔法力量</h4>
-                                <div class="info-grid">
-                                    <div class="info-card" style="border-bottom-color: #e74c3c;"><span class="emoji">🌡️</span><span class="part">溫度改變</span><br><span class="eg">冰塊受熱融化</span></div>
-                                    <div class="info-card" style="border-bottom-color: #95a5a6;"><span class="emoji">🔨</span><span class="part">施加外力</span><br><span class="eg">黏土被捏成不同形狀</span></div>
-                                    <div class="info-card" style="border-bottom-color: #3498db;"><span class="emoji">💧</span><span class="part">加入水中</span><br><span class="eg">食鹽溶化在水裡</span></div>
-                                </div>
-                            </div>
-                        `,
-                        "lessonHTML": `
-                            <h3>🪄 物質的變身術</h3>
-                            <p>在我們身邊的物品（物質），有時候會改變它們的形狀或狀態。有三大魔法力量可以讓它們變身：</p>
-                            <ul>
-                                <li><span class="keyword">溫度的改變</span>：這是最常見的魔法！東西變熱（受熱）或變冷（遇冷），狀態就會改變。例如：冰淇淋離開冰箱後，因為吸收空氣中的熱量，就會漸漸融化。</li>
-                                <li><span class="keyword">外力</span>：用力捏、壓、拉，可以改變物體的形狀，就像把紙揉成一團。</li>
-                                <li><span class="keyword">溶於水</span>：有些東西放進水裡會不見，這叫做「溶解」，例如方糖泡進紅茶裡。</li>
-                            </ul>
-                        `,
-                        "applicationText": `
-                            <h3>🤔 腦力激盪：小小思辨家</h3>
-                            <div class="think-box">
-                                <strong>情境：口袋裡的巧克力</strong><br>
-                                小明把一塊硬梆梆的巧克力放進褲子口袋裡，開心地跑去操場玩。過了半小時，他想把巧克力拿出來吃，卻發現口袋變得黏呼呼的！<br><br>
-                                <strong>👉 想一想：</strong>小明明明沒有帶打火機或吹風機，為什麼口袋裡的巧克力會「融化」呢？熱量是從哪裡來的？
-                            </div>
-                            <div class="hover-reveal">
-                                <div class="answer-text">
-                                    💡 解答：熱量是從「小明的身體」傳出來的！人體的溫度大約是 36 度，比硬梆梆巧克力的融點還要高。巧克力吸收了身體的體溫（受熱），就融化變成液體了。
-                                </div>
-                            </div>
-                        `
-                    },
-                    {
-                        "chapterTitle": "【2-2】 溫度改變對水有哪些變化",
-                        "infographicHTML": `
-                            <br>
                             <div class="infographic">
                                 <h4 style="margin:0; color:#2c3e50;">💡 學習圖解：水的三態變化</h4>
                                 <div class="timeline">
-                                    <div class="timeline-step" style="border-color:#3498db;"><span class="emoji">🧊</span><span class="part">固態 (冰)</span><br><span style="font-size:0.8em">低於 0°C</span></div>
-                                    <div class="timeline-arrow">♨️受熱➔<br>❄️遇冷🡠</div>
-                                    <div class="timeline-step" style="border-color:#2980b9;"><span class="emoji">💧</span><span class="part">液態 (水)</span><br><span style="font-size:0.8em">常溫</span></div>
-                                    <div class="timeline-arrow">♨️受熱➔<br>❄️遇冷🡠</div>
-                                    <div class="timeline-step" style="border-color:#bdc3c7;"><span class="emoji">☁️</span><span class="part">氣態 (水蒸氣)</span><br><span style="font-size:0.8em">達到 100°C</span></div>
+                                    <div class="timeline-step" style="border-color:#3498db;"><span class="emoji">🧊</span><span class="part">固態 (冰)</span></div>
+                                    <div class="timeline-arrow">♨️受熱➔</div>
+                                    <div class="timeline-step" style="border-color:#2980b9;"><span class="emoji">💧</span><span class="part">液態 (水)</span></div>
+                                    <div class="timeline-arrow">♨️受熱➔</div>
+                                    <div class="timeline-step" style="border-color:#bdc3c7;"><span class="emoji">☁️</span><span class="part">氣態 (水蒸氣)</span></div>
                                 </div>
                             </div>
                         `,
                         "lessonHTML": `
-                            <h3>💧 百變水精靈：水的三種型態</h3>
-                            <p>水是地球上最神奇的物質，它會因為溫度的不同，出現三種完全不同的長相（三態）：</p>
+                            <h3>💧 百變水精靈</h3>
+                            <p>水會因為溫度的不同，出現三種完全不同的長相（三態）：</p>
                             <ul>
-                                <li><span class="keyword">固態（冰）</span>：當溫度非常冷，降到 <strong>0°C（冰點）</strong>時，水就會結冰，變得硬梆梆的，這叫做「凝固」。</li>
-                                <li><span class="keyword">液態（水）</span>：平常我們喝的水。如果把冰塊拿出來放著，它受熱變成液態水，這叫做「融化」。</li>
-                                <li><span class="keyword">氣態（水蒸氣）</span>：當水被加熱到 <strong>100°C（沸點）</strong>，水會一直冒泡泡並變成看不見的氣體跑到空氣中，這叫做「沸騰」或「蒸發」。</li>
+                                <li><span class="keyword">固態（冰）</span>：溫度降到 <strong>0°C</strong>時結冰。</li>
+                                <li><span class="keyword">液態（水）</span>：冰塊受熱變成水，叫做「融化」。</li>
+                                <li><span class="keyword">氣態（水蒸氣）</span>：加熱到 <strong>100°C</strong>沸騰，變成看不見的氣體。</li>
                             </ul>
                         `,
                         "applicationText": `
                             <h3>🤔 腦力激盪：小小思辨家</h3>
                             <div class="think-box">
                                 <strong>情境：杯子流汗了？</strong><br>
-                                夏天時，從冰箱拿出一瓶冰冰涼涼的可樂倒進玻璃杯裡。過了一下子，玻璃杯的「外面」竟然出現了好多小水滴，看起來就像杯子在流汗一樣！<br><br>
-                                <strong>👉 想一想：</strong>玻璃杯明明沒有破洞，裡面的可樂也沒有跑出來，那杯子外面的水滴到底是從哪裡來的呢？
+                                冰可樂倒進玻璃杯裡。過了一下子，玻璃杯外面出現好多小水滴！<br>
+                                <strong>👉 想一想：</strong>玻璃杯沒有破，水滴是哪來的？
                             </div>
                             <div class="hover-reveal">
                                 <div class="answer-text">
-                                    💡 解答：這是因為空氣中本來就充滿看不見的「水蒸氣」。當熱熱的水蒸氣碰到冰冷的玻璃杯面時，就會「遇冷」變成液態的小水滴附著在杯子上。這個過程叫做「凝結」喔！
-                                </div>
-                            </div>
-                        `
-                    },
-                    {
-                        "chapterTitle": "【2-3】 溫度改變對其他物質有什麼影響",
-                        "infographicHTML": `
-                            <br>
-                            <div class="infographic">
-                                <h4 style="margin:0; color:#2c3e50;">💡 學習圖解：可逆與不可逆變化</h4>
-                                <div class="info-grid">
-                                    <div class="info-card" style="border-bottom-color: #27ae60;"><span class="emoji">🔄</span><span class="part">可逆變化</span><br><span class="eg">冰融化成水，還能再凍成冰</span></div>
-                                    <div class="info-card" style="border-bottom-color: #e74c3c;"><span class="emoji">🚫</span><span class="part">不可逆變化</span><br><span class="eg">生米煮成熟飯，回不去了</span></div>
-                                    <div class="info-card" style="border-bottom-color: #f39c12;"><span class="emoji">📏</span><span class="part">熱脹冷縮</span><br><span class="eg">金屬受熱會變大一點點</span></div>
-                                </div>
-                            </div>
-                        `,
-                        "lessonHTML": `
-                            <h3>🍳 回不去的神奇化學變化</h3>
-                            <p>除了水以外，溫度也會對其他物質施展魔法！有些魔法是「變不回來」的：</p>
-                            <ul>
-                                <li><span class="keyword">不可逆變化（化學變化）</span>：很多食物受熱後，性質會完全改變，而且再也無法恢復原狀！例如：透明的生蛋白煎熟後變成白色的固體、玉米加熱爆成爆米花。就算把它們放回冰箱，也變不回生蛋和玉米粒了。</li>
-                                <li><span class="keyword">熱脹冷縮現象</span>：很多物體（尤其是金屬和氣體）在受熱時體積會稍微「膨脹變大」，遇冷時會「收縮變小」。</li>
-                            </ul>
-                        `,
-                        "applicationText": `
-                            <h3>🤔 腦力激盪：小小思辨家</h3>
-                            <div class="think-box">
-                                <strong>情境：鐵軌中間的神秘小縫隙</strong><br>
-                                火車在鐵軌上跑的時候，總是會發出「喀勒、喀勒」的聲音。如果你仔細觀察，會發現很長的鐵軌，其實不是緊緊連在一起的，每一小段鐵軌之間都會故意留下一道「小縫隙」。<br><br>
-                                <strong>👉 想一想：</strong>工程師為什麼不把鐵軌鋪得密密的就好？故意留這個小縫隙有什麼重要的功用呢？
-                            </div>
-                            <div class="hover-reveal">
-                                <div class="answer-text">
-                                    💡 解答：因為金屬有「熱脹冷縮」的特性！夏天天氣非常熱的時候，鐵軌受熱體積會膨脹伸長。如果沒有預留縫隙，鐵軌伸長時就會互相擠壓到變形彎曲，火車開過去就會非常危險！
+                                    💡 解答：空氣中有看不見的「水蒸氣」。熱水蒸氣碰到冰冷的玻璃杯面時，就會「遇冷凝結」成小水滴。
                                 </div>
                             </div>
                         `
                     }
                 ],
                 "questions": [
-                    { id: 201, q: "冰塊放在室溫下會慢慢變成水，是因為發生了什麼事？", options: ["遇冷凝結", "受熱融化", "水分蒸發", "熱脹冷縮"], ans: 1, exp: "冰塊吸收了周圍空氣的熱量，所以從固態融化成液態。" },
-                    { id: 202, q: "水在溫度降到幾度時，會開始結成冰？", options: ["100°C", "50°C", "25°C", "0°C"], ans: 3, exp: "0°C 是水的冰點，低於這個溫度液態水就會凝固成固態的冰。" },
-                    { id: 203, q: "將一杯水放在太陽底下，幾天後水變少了，這是什麼現象？", options: ["凝固", "融化", "蒸發", "沸騰"], ans: 2, exp: "水在常溫下吸收熱量，慢慢變成氣態的水蒸氣散失到空氣中，這叫做蒸發。" },
-                    { id: 204, q: "空氣中的水蒸氣遇到冰冷的玻璃杯面，變成小水滴附著在上面，這叫做什麼？", options: ["凝固", "凝結", "融化", "沸騰"], ans: 1, exp: "氣態的水蒸氣遇冷變成液態的水，這個過程稱為凝結。" },
-                    { id: 205, q: "下列哪一種狀態的水是「氣態」的？", options: ["冰塊", "自來水", "水蒸氣", "冰水"], ans: 2, exp: "水蒸氣是水受熱後變成看不見的氣體狀態。" },
-                    { id: 206, q: "把水加熱到沸騰不斷冒泡時，溫度大約是幾度？", options: ["0°C", "50°C", "100°C", "200°C"], ans: 2, exp: "在一般氣壓下，水的沸點大約是 100°C。" },
-                    { id: 207, q: "下列哪一種物質的變化，冷卻後「無法」恢復原來的樣子（不可逆變化）？", options: ["冰塊融化成水", "巧克力受熱變軟", "生雞蛋煎成荷包蛋", "奶油受熱融化"], ans: 2, exp: "生雞蛋受熱煮熟後，蛋白質發生了改變，就算放進冰箱也無法變回生雞蛋。" },
-                    { id: 208, q: "將生米加水放入電鍋煮成熟飯，這是受到什麼因素影響產生的變化？", options: ["加水溶解", "受熱產生變化", "用力擠壓", "遇冷產生變化"], ans: 1, exp: "電鍋加熱產生的高溫，讓生米煮熟變成米飯，這是一種不可逆的熱變化。" },
-                    { id: 209, q: "鐵軌之間會預留縫隙，是為了防止夏天發生什麼現象而導致鐵軌變形？", options: ["熱脹", "冷縮", "融化", "生鏽"], ans: 0, exp: "金屬受熱體積會變大（熱脹），預留縫隙才有空間讓它伸展而不互相擠壓變形。" },
-                    { id: 210, q: "哪一種情況是因為「外力」而改變了物體的形狀？", options: ["冰棒融化", "把紙揉成一團", "玉米變成爆米花", "糖溶在水裡"], ans: 1, exp: "用手捏、揉就是施加外力，改變了紙張原本平整的形狀。" },
-                    { id: 211, q: "將一匙食鹽倒進水裡攪拌後看不見了，這是發生了什麼現象？", options: ["融化", "溶解", "蒸發", "凝結"], ans: 1, exp: "固體物質均勻混合在液體中看不見，科學上稱為溶解（融化是指受熱變液體喔！）。" },
-                    { id: 212, q: "打不開果醬的金屬瓶蓋時，如果用熱水沖一下金屬蓋子就會比較好開，這是應用了什麼原理？", options: ["熱脹冷縮", "溶解", "蒸發", "凝固"], ans: 0, exp: "金屬蓋子受熱會稍微膨脹（變大一點點），所以就會變得比較鬆、好轉開。" },
-                    { id: 213, q: "關於水的三態，下列哪一個敘述是「錯誤」的？", options: ["冰是固態的水", "水蒸氣是看得見的白煙", "水在常溫下是液態", "冰受熱會融化成水"], ans: 1, exp: "水蒸氣是『看不見』的氣體！我們看到的熱水白煙，其實是水蒸氣遇冷凝結成的『小水滴』喔！" },
-                    { id: 214, q: "冬天說話時嘴巴會吐出「白煙」，這陣白煙其實是什麼？", options: ["二氧化碳氣體", "小冰塊", "微小的液態小水滴", "灰塵"], ans: 2, exp: "嘴巴呼出的熱水蒸氣，遇到外面冰冷的空氣，瞬間『凝結』成許多漂浮在空中的小水滴。" },
-                    { id: 215, q: "把巧克力放在手心一陣子會變得軟軟黏黏的，熱量是從哪裡來的？", options: ["太陽", "空氣", "手心的體溫", "巧克力自己發熱"], ans: 2, exp: "人體的體溫大約有36度，這股熱量傳遞給巧克力，讓它受熱融化了。" }
+                    { id: 201, q: "空氣中的水蒸氣遇到冰冷玻璃杯面變成小水滴，這叫做什麼？", options: ["凝固", "凝結", "融化", "沸騰"], ans: 1, exp: "氣態水蒸氣遇冷變成液態水，稱為凝結。" },
+                    { id: 202, q: "冬天說話時嘴巴吐出「白煙」，這陣白煙其實是什麼？", options: ["二氧化碳", "小冰塊", "微小的液態水滴", "灰塵"], ans: 2, exp: "熱水蒸氣遇到冷空氣，瞬間『凝結』成許多漂浮在空中的小水滴。" }
+                ]
+            },
+
+            // ==================== 第三單元 ====================
+            "unit3": {
+                "unitTitle": "第三單元：我是動物解說員",
+                "sections": [
+                    {
+                        "chapterTitle": "【3-1】 動物身體構造和功能有關嗎",
+                        "infographicHTML": `
+                            <br>
+                            <div class="infographic">
+                                <h4 style="margin:0; color:#2c3e50;">💡 學習圖解：動物的超級裝備</h4>
+                                <div class="info-grid">
+                                    <div class="info-card" style="border-bottom-color: #3498db;"><span class="emoji">🦅</span><span class="part">翅膀</span><br><span class="eg">提供升力在空中飛翔</span></div>
+                                    <div class="info-card" style="border-bottom-color: #2ecc71;"><span class="emoji">🐸</span><span class="part">蹼 (腳趾間的膜)</span><br><span class="eg">像蛙鞋一樣幫助游泳</span></div>
+                                    <div class="info-card" style="border-bottom-color: #e67e22;"><span class="emoji">🦘</span><span class="part">強壯後腿</span><br><span class="eg">用來快速跳躍逃跑</span></div>
+                                </div>
+                            </div>
+                        `,
+                        "lessonHTML": `
+                            <h3>🦅 動物的神奇身體構造</h3>
+                            <p>動物為了生存，牠們的身體構造就像「特製工具」一樣，每一部分都有特別的功能：</p>
+                            <ul>
+                                <li><span class="keyword">翅膀與羽毛</span>：鳥類有輕巧的骨骼和翅膀，讓牠們能對抗地心引力飛上天。</li>
+                                <li><span class="keyword">鰭與流線型身體</span>：魚類有流線型的身體來減少水阻，用「鰭」來控制方向和前進。</li>
+                                <li><span class="keyword">強壯的腿與腳蹼</span>：青蛙的後腿非常強壯，能跳得很高；腳趾之間還有「蹼」，就像天生的蛙鞋，讓牠們在水裡游得超快。</li>
+                            </ul>
+                        `,
+                        "applicationText": `
+                            <h3>🤔 腦力激盪：小小思辨家</h3>
+                            <div class="think-box">
+                                <strong>情境：如果企鵝來到平地賽跑...</strong><br>
+                                企鵝雖然是鳥類，但牠們不會飛，走起路來還搖搖晃晃的，看起來很笨重。<br><br>
+                                <strong>👉 想一想：</strong>企鵝的翅膀雖然不能飛，但在「哪裡」卻能發揮出像超級跑車一樣的功能呢？
+                            </div>
+                            <div class="hover-reveal">
+                                <div class="answer-text">
+                                    💡 解答：在海裡！企鵝的翅膀演化成了像「槳」一樣的鰭狀肢，讓牠們能在水裡高速游泳、抓魚，是海洋中的超級游泳高手！
+                                </div>
+                            </div>
+                        `
+                    },
+                    {
+                        "chapterTitle": "【3-2】 動物身體構造和適應環境有關嗎",
+                        "infographicHTML": `
+                            <br>
+                            <div class="infographic">
+                                <h4 style="margin:0; color:#2c3e50;">💡 學習圖解：適應環境的魔法</h4>
+                                <div class="info-grid">
+                                    <div class="info-card" style="border-bottom-color: #bdc3c7;"><span class="emoji">🐻‍❄️</span><span class="part">極地保暖</span><br><span class="eg">厚厚脂肪與濃密毛髮</span></div>
+                                    <div class="info-card" style="border-bottom-color: #f39c12;"><span class="emoji">🐪</span><span class="part">沙漠儲存</span><br><span class="eg">駝峰儲存脂肪提供能量</span></div>
+                                    <div class="info-card" style="border-bottom-color: #27ae60;"><span class="emoji">🦎</span><span class="part">保護色</span><br><span class="eg">身體顏色跟環境融為一體</span></div>
+                                </div>
+                            </div>
+                        `,
+                        "lessonHTML": `
+                            <h3>🌍 動物的環境求生術</h3>
+                            <p>地球上有很冷、很熱、很乾燥的地方，動物的身體會根據環境「改變設計」：</p>
+                            <ul>
+                                <li><span class="keyword">極地動物（如北極熊）</span>：有厚厚的脂肪和密集的毛髮，就像穿了超級羽絨衣，可以在冰天雪地裡保暖。</li>
+                                <li><span class="keyword">沙漠動物（如駱駝）</span>：駱駝背上的「駝峰」其實不是裝水，而是裝滿了「脂肪」！當沙漠裡找不到食物時，駝峰裡的脂肪可以轉換成能量和水分。</li>
+                                <li><span class="keyword">森林與草地動物</span>：許多動物擁有<span class="keyword">保護色</span>（如竹節蟲、變色龍），讓身體顏色跟樹枝或葉子一樣，躲避敵人的追捕。</li>
+                            </ul>
+                        `,
+                        "applicationText": `
+                            <h3>🤔 腦力激盪：小小思辨家</h3>
+                            <div class="think-box">
+                                <strong>情境：北極熊的皮膚其實是...黑色的？</strong><br>
+                                我們看到的北極熊都是一身白毛，完美隱藏在雪地裡。但如果你撥開牠的白毛，會發現牠的皮膚竟然是「黑色」的！<br><br>
+                                <strong>👉 想一想：</strong>在這麼冷的地方，為什麼北極熊需要「黑色」的皮膚呢？（提示：夏天穿黑衣服會覺得比較熱！）
+                            </div>
+                            <div class="hover-reveal">
+                                <div class="answer-text">
+                                    💡 解答：黑色的皮膚可以幫助北極熊「吸收太陽的熱量」！陽光穿過透明中空的白毛後，黑色皮膚能最有效率地把熱量吸收到身體裡保暖。
+                                </div>
+                            </div>
+                        `
+                    },
+                    {
+                        "chapterTitle": "【3-3】 動物有什麼生存法寶",
+                        "infographicHTML": `
+                            <br>
+                            <div class="infographic">
+                                <h4 style="margin:0; color:#2c3e50;">💡 學習圖解：動物的防禦大招</h4>
+                                <div class="timeline">
+                                    <div class="timeline-step" style="border-color:#34495e;"><span class="emoji">🐢</span><span class="part">裝甲防禦</span><br><span style="font-size:0.8em">縮進堅硬外殼</span></div>
+                                    <div class="timeline-step" style="border-color:#e67e22;"><span class="emoji">🦔</span><span class="part">尖刺武器</span><br><span style="font-size:0.8em">豎起刺讓敵人受傷</span></div>
+                                    <div class="timeline-step" style="border-color:#9b59b6;"><span class="emoji">🦨</span><span class="part">化學攻擊</span><br><span style="font-size:0.8em">噴出惡臭或毒液</span></div>
+                                    <div class="timeline-step" style="border-color:#7f8c8d;"><span class="emoji">😵</span><span class="part">裝死欺騙</span><br><span style="font-size:0.8em">假裝死掉讓敵人沒興趣</span></div>
+                                </div>
+                            </div>
+                        `,
+                        "lessonHTML": `
+                            <h3>🛡️ 不好惹！動物的終極防禦</h3>
+                            <p>大自然中充滿危險，弱小的動物為了不被吃掉，演化出了各種超強的「生存法寶」：</p>
+                            <ul>
+                                <li><span class="keyword">硬殼裝甲</span>：烏龜、蝸牛遇到危險時，會把柔軟的身體縮進堅硬的殼裡保護自己。</li>
+                                <li><span class="keyword">尖刺攻擊</span>：豪豬和刺蝟的背上長滿了尖刺，老虎獅子看了也不敢咬。</li>
+                                <li><span class="keyword">惡臭與毒液</span>：臭鼬會噴出超臭的氣體把敵人熏跑；毒蛇和箭毒蛙則是用鮮豔的顏色警告別人「我有毒，別吃我」。</li>
+                                <li><span class="keyword">欺敵戰術</span>：有些昆蟲或蛇遇到危險時，會翻肚「裝死」，讓只喜歡吃活餌的敵人失去興趣。</li>
+                            </ul>
+                        `,
+                        "applicationText": `
+                            <h3>🤔 腦力激盪：小小思辨家</h3>
+                            <div class="think-box">
+                                <strong>情境：氣噗噗的河豚</strong><br>
+                                海裡的河豚平時看起來小小的，但是遇到大魚想吃牠時，牠會猛喝水，把自己的身體脹成一顆充滿刺的「大圓球」。<br><br>
+                                <strong>👉 想一想：</strong>為什麼把自己變大、變圓，就可以防止被大魚吃掉呢？
+                            </div>
+                            <div class="hover-reveal">
+                                <div class="answer-text">
+                                    💡 解答：把身體脹大可以嚇唬敵人，而且脹成一顆充滿刺的大氣球後，大魚的「嘴巴根本張不了那麼大」，也就無法把河豚吞下肚子了！
+                                </div>
+                            </div>
+                        `
+                    }
+                ],
+                "questions": [
+                    { id: 301, q: "鳥類能飛翔在天空中，主要是因為牠們具有哪一種構造？", options: ["蹼", "鰓", "翅膀和羽毛", "堅硬的外殼"], ans: 2, exp: "鳥類的翅膀和羽毛能提供升力，讓牠們在空中飛行。" },
+                    { id: 302, q: "青蛙的腳趾之間有「蹼」，這個構造主要的功能是什麼？", options: ["方便跳躍", "幫助在水中游泳", "用來抓住獵物", "保暖"], ans: 1, exp: "蹼就像人類潛水時穿的蛙鞋，能增加推水面積，幫助游泳。" },
+                    { id: 303, q: "下列哪一種動物的身體構造，是呈現流線型，最適合在水中活動？", options: ["兔子", "老鷹", "海豚", "長頸鹿"], ans: 2, exp: "海豚和魚類等水中生物具有流線型身體，能減少水中的阻力。" },
+                    { id: 304, q: "北極熊能在冰天雪地的極地生活，主要是因為牠們具備什麼構造？", options: ["駝峰", "長長的耳朵", "保護色和厚脂肪", "硬殼"], ans: 2, exp: "白毛形成保護色，厚厚的脂肪和毛髮能抵禦嚴寒。" },
+                    { id: 305, q: "駱駝被稱為「沙漠之舟」，牠背上的駝峰主要儲存了什麼物質來度過缺水的沙漠？", options: ["水分", "血液", "空氣", "脂肪"], ans: 3, exp: "駝峰裡儲存的是脂肪，當缺乏食物時可以分解成能量和水分。" },
+                    { id: 306, q: "竹節蟲長得像樹枝，停在樹上很難被發現。這種生存法寶稱為什麼？", options: ["裝死", "保護色/擬態", "硬殼", "毒液"], ans: 1, exp: "外表長得像周圍環境或物體，藉此隱藏自己，稱為保護色或擬態。" },
+                    { id: 307, q: "當烏龜遇到危險時，牠會採取哪一種防禦方法？", options: ["噴出毒液", "用強壯的後腿踢敵人", "將頭和四肢縮進硬殼中", "變色隱藏"], ans: 2, exp: "烏龜的硬殼是牠們最堅固的防禦裝甲。" },
+                    { id: 308, q: "臭鼬遇到敵人威脅時，會使用什麼特殊的生存法寶來保護自己？", options: ["豎起尖刺", "放出惡臭氣體", "裝死", "快速飛走"], ans: 1, exp: "臭鼬會從尾部噴出極度惡臭的液體，讓敵人受不了而逃跑。" },
+                    { id: 309, q: "為什麼有些青蛙或毛毛蟲的身體顏色非常鮮豔亮麗？", options: ["為了吸引人類來抓", "這是一種警告色，代表我有毒", "為了反射陽光", "因為牠們喜歡漂亮"], ans: 1, exp: "自然界中鮮豔的顏色通常是警告色，告訴掠食者『我有毒，吃我會後悔』。" },
+                    { id: 310, q: "魚類能在水中呼吸，是因為牠們具有哪一種構造？", options: ["肺臟", "皮膚", "鰓", "氣孔"], ans: 2, exp: "魚類利用鰓過濾水中的氧氣來進行呼吸。" },
+                    { id: 311, q: "河豚遇到危險會把身體脹大，這有什麼防禦效果？", options: ["讓自己游得更快", "讓敵人覺得牠很大，且難以吞咽", "可以發出巨大聲音", "能放出毒氣"], ans: 1, exp: "脹大且充滿刺的身體會讓掠食者的嘴巴無法吞下。" },
+                    { id: 312, q: "長頸鹿有長長的脖子，這主要是為了適應什麼環境需求？", options: ["為了看遠處的風景", "方便吃到高樹上的葉子", "為了在水裡呼吸", "方便和同伴說話"], ans: 1, exp: "長脖子是為了適應草原環境，能吃到其他動物吃不到的高處樹葉。" },
+                    { id: 313, q: "下列哪一種動物遇到危險時，最常使用「裝死」的招式？", options: ["老虎", "負鼠", "大象", "老鷹"], ans: 1, exp: "負鼠和某些蛇類遇到威脅時，會翻肚裝死，因為有些肉食動物不吃死屍。" },
+                    { id: 314, q: "燕子的尾巴呈現剪刀狀，這有什麼功用？", options: ["好看用", "保暖", "飛行時控制方向，非常靈活", "用來築巢"], ans: 2, exp: "剪刀狀的尾羽能幫助燕子在空中靈活地轉向和捕捉昆蟲。" },
+                    { id: 315, q: "企鵝雖然有翅膀但不會飛，牠們的翅膀現在有什麼功能？", options: ["變成鰭狀，用來在水中快速游泳", "用來挖地洞", "用來抱住小企鵝", "完全沒有功用"], ans: 0, exp: "企鵝的翅膀演化成了適合划水的鰭狀肢，是極佳的游泳工具。" }
+                ]
+            },
+
+            // ==================== 第四單元 ====================
+            "unit4": {
+                "unitTitle": "第四單元：天氣變變變",
+                "sections": [
+                    {
+                        "chapterTitle": "【4-1】 天氣對生活有何影響",
+                        "infographicHTML": `
+                            <br>
+                            <div class="infographic">
+                                <h4 style="margin:0; color:#2c3e50;">💡 學習圖解：天氣與我們的生活</h4>
+                                <div class="info-grid">
+                                    <div class="info-card" style="border-bottom-color: #f1c40f;"><span class="emoji">☀️</span><span class="part">晴天</span><br><span class="eg">曬衣服、戶外運動</span></div>
+                                    <div class="info-card" style="border-bottom-color: #3498db;"><span class="emoji">🌧️</span><span class="part">雨天</span><br><span class="eg">穿雨衣、室內活動</span></div>
+                                    <div class="info-card" style="border-bottom-color: #e74c3c;"><span class="emoji">🌀</span><span class="part">颱風天</span><br><span class="eg">防颱準備、待在家裡</span></div>
+                                </div>
+                            </div>
+                        `,
+                        "lessonHTML": `
+                            <h3>🌤️ 每天都在變的天氣</h3>
+                            <p>天氣就像天空的表情，每天都不一樣，而且深深影響著我們的生活：</p>
+                            <ul>
+                                <li><span class="keyword">晴天</span>：出大太陽，氣溫較高。適合洗曬衣物和棉被，去戶外玩要記得擦防曬。</li>
+                                <li><span class="keyword">陰雨天</span>：雲很多、會下雨，氣溫通常會降低。出門需要帶雨具，馬路會變滑要注意安全。</li>
+                                <li><span class="keyword">颱風與極端天氣</span>：會帶來強風和豪雨。這時候我們必須做好「防颱準備」，把陽台盆栽收好，並且乖乖待在室內最安全。</li>
+                            </ul>
+                        `,
+                        "applicationText": `
+                            <h3>🤔 腦力激盪：小小思辨家</h3>
+                            <div class="think-box">
+                                <strong>情境：下雨過後特別涼快？</strong><br>
+                                炎熱的夏天下午，如果突然下了一場大雷雨，雨停之後，通常會覺得空氣變得涼涼的，沒有那麼熱了。<br><br>
+                                <strong>👉 想一想：</strong>為什麼下雨可以幫炎熱的地球「降溫」呢？這跟我們學過的「水的三態變化」有什麼關係？
+                            </div>
+                            <div class="hover-reveal">
+                                <div class="answer-text">
+                                    💡 解答：因為落到地面的雨水，會吸收周圍的「熱量」蒸發變成水蒸氣。熱量被水吸走了，空氣中的溫度就會下降，我們就會覺得涼快了！
+                                </div>
+                            </div>
+                        `
+                    },
+                    {
+                        "chapterTitle": "【4-2】 如何觀測天氣",
+                        "infographicHTML": `
+                            <br>
+                            <div class="infographic">
+                                <h4 style="margin:0; color:#2c3e50;">💡 學習圖解：氣象觀測小工具</h4>
+                                <div class="timeline">
+                                    <div class="timeline-step" style="border-color:#e74c3c; min-width: 120px;"><span class="emoji">🌡️</span><span class="part">測量氣溫</span><br><span style="font-size:0.8em">氣溫計 (平視紅色液柱)</span></div>
+                                    <div class="timeline-step" style="border-color:#3498db; min-width: 120px;"><span class="emoji">📏</span><span class="part">測量雨量</span><br><span style="font-size:0.8em">雨量器 (平底直筒杯)</span></div>
+                                    <div class="timeline-step" style="border-color:#2ecc71; min-width: 120px;"><span class="emoji">☁️</span><span class="part">觀測雲量</span><br><span style="font-size:0.8em">用眼睛看雲占天空的比例</span></div>
+                                </div>
+                            </div>
+                        `,
+                        "lessonHTML": `
+                            <h3>🔍 我是小小氣象觀測員</h3>
+                            <p>氣象學家是用精密的儀器來測量天氣，我們也可以用簡單的工具來觀測：</p>
+                            <ul>
+                                <li><span class="keyword">觀測氣溫（氣溫計）</span>：要把氣溫計放在「通風且不會被陽光直射」的地方。讀取溫度時，眼睛要和紅色液柱的頂端「平視」，單位是攝氏（°C）。</li>
+                                <li><span class="keyword">觀測雨量（雨量器）</span>：要選擇一個「平底、直筒」的容器，放在「空曠沒有遮蔽物」的地方收集雨水。用尺量水的高度，單位是毫米（mm）。</li>
+                                <li><span class="keyword">觀測雲量</span>：如果天空幾乎沒有雲是「晴天」；雲占了一半左右是「多雲」；雲把天空都遮住了就是「陰天」。</li>
+                            </ul>
+                        `,
+                        "applicationText": `
+                            <h3>🤔 腦力激盪：小小思辨家</h3>
+                            <div class="think-box">
+                                <strong>情境：放錯位置的雨量杯</strong><br>
+                                小華想測量今天的雨量，他拿了一個平底直筒杯，並把它放在「大樹底下」，這樣杯子才不會被風吹倒。<br><br>
+                                <strong>👉 想一想：</strong>小華把杯子放在大樹底下測量出來的雨量，會是準確的嗎？為什麼？
+                            </div>
+                            <div class="hover-reveal">
+                                <div class="answer-text">
+                                    💡 解答：不準確！大樹的葉子會像雨傘一樣遮住雨水，落進杯子裡的雨水就會變少。所以測量雨量一定要在「空曠」的地方！
+                                </div>
+                            </div>
+                        `
+                    },
+                    {
+                        "chapterTitle": "【4-3】 如何應用氣象資訊",
+                        "infographicHTML": `
+                            <br>
+                            <div class="infographic">
+                                <h4 style="margin:0; color:#2c3e50;">💡 學習圖解：看懂天氣預報</h4>
+                                <div class="info-grid">
+                                    <div class="info-card" style="border-bottom-color: #2c3e50;"><span class="emoji">🌡️</span><span class="part">22~28°C</span><br><span class="eg">代表最低到最高氣溫</span></div>
+                                    <div class="info-card" style="border-bottom-color: #3498db;"><span class="emoji">☔</span><span class="part">降雨機率 80%</span><br><span class="eg">非常容易下雨，一定要帶傘</span></div>
+                                    <div class="info-card" style="border-bottom-color: #e67e22;"><span class="emoji">⚠️</span><span class="part">氣象特報</span><br><span class="eg">大雨特報或低溫特報等警告</span></div>
+                                </div>
+                            </div>
+                        `,
+                        "lessonHTML": `
+                            <h3>📺 出門前必看：天氣預報</h3>
+                            <p>現在我們可以透過電視、網路或手機，提早知道明天甚至一週後的天氣，這可以幫我們做好準備：</p>
+                            <ul>
+                                <li><span class="keyword">看氣溫穿衣服</span>：預報說溫度會下降（低溫特報），明天就要多穿一件外套。</li>
+                                <li><span class="keyword">看降雨機率帶傘</span>：降雨機率越高，代表下雨的機會越大。如果預報是 70% 或 80%，出門一定要把雨傘放進包包裡。</li>
+                                <li><span class="keyword">注意特報防災</span>：如果有「豪雨特報」或「颱風警報」，千萬不要去海邊或山上玩，以免發生危險。</li>
+                            </ul>
+                        `,
+                        "applicationText": `
+                            <h3>🤔 腦力激盪：小小思辨家</h3>
+                            <div class="think-box">
+                                <strong>情境：校外教學的衣服準備</strong><br>
+                                明天學校要去動物園校外教學，氣象預報顯示：「多雲午後有短暫陣雨，氣溫 25~32°C」。<br><br>
+                                <strong>👉 想一想：</strong>根據這份氣象預報，你的背包裡「最重要」需要準備哪兩樣東西呢？
+                            </div>
+                            <div class="hover-reveal">
+                                <div class="answer-text">
+                                    💡 解答：1. 「雨傘或雨衣」（因為午後有陣雨）； 2. 「水壺」（最高溫到 32°C 會很熱，流汗需要補充水分）。看懂氣象預報，出門就不會狼狽啦！
+                                </div>
+                            </div>
+                        `
+                    }
+                ],
+                "questions": [
+                    { id: 401, q: "下列哪一種天氣狀況，最適合把家裡的厚棉被拿出來曬？", options: ["陰天", "晴天", "下雨天", "颱風天"], ans: 1, exp: "晴天有強烈的陽光和高溫，可以讓棉被快速乾燥並殺菌。" },
+                    { id: 402, q: "讀取氣溫計的溫度時，眼睛應該怎麼看才準確？", options: ["從上往下看", "從下往上看", "和紅色液柱的頂端平視", "閉著眼睛看"], ans: 2, exp: "平視才能準確對齊刻度，仰視或俯視都會造成視覺誤差。" },
+                    { id: 403, q: "測量雨量時，應該選擇什麼形狀的容器最適合？", options: ["平底直筒的杯子", "上面寬下面窄的碗", "下面寬上面窄的瓶子", "隨便什麼杯子都可以"], ans: 0, exp: "平底直筒的杯子可以確保降落進來的水位高度能真實反映降雨量。" },
+                    { id: 404, q: "如果要測量今天下了多少雨，應該把雨量器放在哪裡比較好？", options: ["大樹底下", "屋簷底下", "空曠沒有遮蔽物的地方", "客廳的桌上"], ans: 2, exp: "放在空曠處才能收集到真實從天空落下的雨水，不會被擋住。" },
+                    { id: 405, q: "氣象預報顯示明天的「降雨機率是 90%」，這代表什麼意思？", options: ["明天只會下 90 分鐘的雨", "明天有九成的機會會下雨，記得帶傘", "明天全台灣有 90% 的地方會下雨", "明天的雨量是 90 毫米"], ans: 1, exp: "降雨機率是指該地區下雨的機會大小，數字越高越容易下雨。" },
+                    { id: 406, q: "如果天空被雲完全遮住了，幾乎看不到藍天，這天氣稱為什麼？", options: ["晴天", "多雲", "陰天", "颱風"], ans: 2, exp: "雲量占據天空絕大部分甚至全部，沒有陽光透出，稱為陰天。" },
+                    { id: 407, q: "測量氣溫時，氣溫計應該放在哪裡測出來的氣溫最準確？", options: ["大太陽直射的地方", "通風且有遮蔽的陰涼處", "冰箱裡面", "冷氣機出風口"], ans: 1, exp: "測量的是『空氣』的溫度，太陽直射會讓氣溫計吸熱變熱，導致測出來的溫度太高。" },
+                    { id: 408, q: "天氣預報說氣溫是「20°C ~ 25°C」，其中的 20°C 是指什麼？", options: ["平均氣溫", "最高氣溫", "最低氣溫", "晚上的氣溫"], ans: 2, exp: "前面的較小數字代表當日預測的最低氣溫，後面是最高氣溫。" },
+                    { id: 409, q: "發布颱風警報時，下列哪一項準備工作是「錯誤」的？", options: ["準備手電筒和乾糧", "把陽台的盆栽搬進屋內", "趕快去海邊觀浪", "待在室內不要亂跑"], ans: 2, exp: "颱風天去海邊觀浪非常危險，容易被長浪捲走，千萬不可前往。" },
+                    { id: 410, q: "台灣測量氣溫的單位通常是使用哪一種？", options: ["毫米 (mm)", "公斤 (kg)", "攝氏度 (°C)", "公分 (cm)"], ans: 2, exp: "台灣氣溫使用攝氏度 (°C)，毫米 (mm) 是測量雨量的單位。" },
+                    { id: 411, q: "下列哪一種天氣災害，會帶來極強的風勢和大量的降雨？", options: ["乾旱", "颱風", "寒流", "濃霧"], ans: 1, exp: "颱風是劇烈的天氣系統，特色就是狂風暴雨。" },
+                    { id: 412, q: "天氣轉涼，氣象局發布了低溫特報，我們應該怎麼做？", options: ["多喝冰水", "穿上保暖的外套", "去海邊游泳", "把窗戶全部打開"], ans: 1, exp: "低溫特報代表氣溫會降得很低，要注意保暖以免感冒。" },
+                    { id: 413, q: "想要知道明天需不需要帶雨傘，查氣象預報時要看哪一個資訊？", options: ["最高氣溫", "紫外線指數", "風向", "降雨機率"], ans: 3, exp: "降雨機率可以告訴我們明天會不會下雨，以決定是否帶傘。" },
+                    { id: 414, q: "連續好幾個月都不下雨，會造成什麼嚴重的問題？", options: ["水災", "寒害", "旱災(缺水)", "地震"], ans: 2, exp: "長期不下雨會導致水庫見底，引發旱災，影響生活和農業用水。" },
+                    { id: 415, q: "下雨天出門時，穿什麼顏色的雨衣比較安全？", options: ["黑色或深藍色", "透明無色", "鮮豔的黃色或橘色", "迷彩保護色"], ans: 2, exp: "下雨天視線不佳，穿鮮豔顏色的雨衣能讓來車更容易注意到你，比較安全。" }
                 ]
             }
         }
@@ -471,7 +554,7 @@
 
     let currentQuestions = [];
     let currentGrade = "grade3_term2";
-    let currentUnit = "unit2"; // 預設改為第二單元，方便你直接測試
+    let currentUnit = "unit4"; // 預設改為最新的第四單元
     let userMistakes = [];
 
     function loadCourse() {
@@ -630,7 +713,6 @@
         }
     }
 
-    // 啟動程式 (為了方便測試，一進入網頁會直接載入選單上的預設值)
     window.onload = loadCourse;
 </script>
 
