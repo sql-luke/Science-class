@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>自然科學學習網 - 康軒三下 (題庫分組循環版)</title>
+    <title>自然科學學習網 - 康軒三下 (遊戲化UI完整版)</title>
     <style>
-        :root { --primary: #2980b9; --secondary: #2c3e50; --bg: #f4f7f6; --danger: #e74c3c; --success: #27ae60; --light-blue: #ebf5fb; --speak-bg: #8e44ad; --lesson-bg: #fffde7; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); color: #333; line-height: 1.6; margin: 0; padding: 0; }
+        :root { --primary: #3498db; --secondary: #2c3e50; --bg: #f8f9fa; --danger: #e74c3c; --success: #27ae60; --light-blue: #ebf5fb; --speak-bg: #1abc9c; --lesson-bg: #fffde7; }
+        
+        /* 增加一點微小的背景點點，讓畫面更活潑 (類似你的圖片背景) */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); background-image: radial-gradient(#e2e8f0 1px, transparent 1px); background-size: 20px 20px; color: #333; line-height: 1.6; margin: 0; padding: 0; }
         
         #top-nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 15px 20px; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; align-items: center; gap: 10px; }
         .selectors { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
@@ -14,10 +16,10 @@
         #course-title { margin: 0; font-size: 1.5rem; text-align: center; }
 
         .container { max-width: 900px; margin: 20px auto; padding: 0 20px; }
-        section { background: #fff; padding: 25px; margin-bottom: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        section { background: #fff; padding: 25px; margin-bottom: 25px; border-radius: 15px; box-shadow: 0 8px 16px rgba(0,0,0,0.05); }
         h2 { color: var(--secondary); border-bottom: 3px solid var(--primary); padding-bottom: 8px; margin-top: 0; }
         
-        .chapter-box { border: 2px solid var(--light-blue); border-radius: 8px; padding: 20px; margin-bottom: 30px; }
+        .chapter-box { border: 2px solid var(--light-blue); border-radius: 12px; padding: 20px; margin-bottom: 30px; }
         .chapter-title { color: var(--primary); font-size: 1.3em; margin-top: 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;}
         
         .infographic { background: #fff; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border: 2px solid #e2e8f0; text-align: center; }
@@ -40,40 +42,52 @@
         .life-app { background: #fdf2e9; padding: 20px; border-radius: 8px; border-left: 5px solid #e67e22; margin-top: 15px; }
         .life-app h3 { margin-top: 0; color: #d35400; display: inline-block; margin-bottom: 10px;}
         .think-box { background: #fff; padding: 15px; border-radius: 5px; border: 1px solid #fdebd0; color: #555; margin-bottom: 15px;}
-        
         .hover-reveal { position: relative; background: #e9ecef; padding: 20px; border-radius: 8px; text-align: center; cursor: pointer; border: 2px dashed #bdc3c7; overflow: hidden; }
         .hover-reveal .answer-text { opacity: 0; transition: opacity 0.3s; color: var(--success); font-weight: bold; font-size: 1.1em; }
         .hover-reveal::before { content: "👀 將滑鼠移過來 (或點擊) 看解答！"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #7f8c8d; font-weight: bold; transition: opacity 0.3s; pointer-events: none; width: 100%;}
         .hover-reveal:hover .answer-text, .hover-reveal:active .answer-text { opacity: 1; }
         .hover-reveal:hover::before, .hover-reveal:active::before { opacity: 0; }
         
-        .question-card { background: #f9f9f9; padding: 15px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #eee; position: relative; }
-        .question-title { font-weight: bold; margin-bottom: 10px; font-size: 1.1em; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
-        .options label { display: block; padding: 8px; cursor: pointer; border-radius: 4px; transition: background 0.2s; }
-        .options label:hover { background: #e2e8f0; }
-        input[type="radio"] { margin-right: 10px; }
+        /* 🔥 全新的測驗區 UI (復刻圖片設計) */
+        .quiz-header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 10px;}
+        .quiz-title-badge { background: #f39c12; color: white; padding: 8px 20px; border-radius: 30px; font-weight: bold; font-size: 1.1rem; box-shadow: 0 4px 6px rgba(243, 156, 18, 0.3);}
+        .quiz-progress-badge { border: 2px solid #1abc9c; color: #16a085; background: #e8f8f5; padding: 8px 20px; border-radius: 30px; font-weight: bold; font-size: 1rem; }
+
+        .question-card { background: #fff; padding: 25px; margin-bottom: 25px; border-radius: 15px; border: 1px solid #e2e8f0; border-left: 8px solid #4a90e2; box-shadow: 0 4px 10px rgba(0,0,0,0.03); position: relative; }
+        .question-title { font-weight: bold; margin-bottom: 20px; font-size: 1.2em; display: flex; justify-content: flex-start; align-items: center; gap: 15px; color: #2c3e50;}
+        .q-number { color: #4a90e2; font-size: 1.1em; }
         
-        .btn-group { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
-        button { background: var(--primary); color: #fff; border: none; padding: 12px 24px; font-size: 16px; border-radius: 5px; cursor: pointer; transition: 0.3s; font-weight: bold; }
+        /* 2x2 網格選項設計 */
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        @media (max-width: 600px) { .options-grid { grid-template-columns: 1fr; } } /* 手機版自動變單排 */
+        
+        .options-grid label { display: flex; align-items: center; background: #f8f9fa; border: 2px solid #e2e8f0; border-radius: 10px; padding: 15px; cursor: pointer; transition: all 0.2s ease; font-weight: bold; color: #555;}
+        .options-grid label:hover { border-color: #3498db; background: #ebf5fb; transform: translateY(-2px); box-shadow: 0 4px 6px rgba(52, 152, 219, 0.1);}
+        .options-grid input[type="radio"] { margin-right: 15px; transform: scale(1.3); cursor: pointer; accent-color: #3498db;}
+        
+        .btn-group { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; justify-content: center;}
+        button { background: var(--primary); color: #fff; border: none; padding: 12px 30px; font-size: 16px; border-radius: 8px; cursor: pointer; transition: 0.3s; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1);}
         button:hover { filter: brightness(1.1); transform: scale(1.02); }
         .btn-danger { background: var(--danger); }
-        .btn-secondary { background: #95a5a6; }
-        .btn-info { background: #34495e; } /* 新增切換題組按鈕顏色 */
+        .btn-info { background: #34495e; } 
         
-        .btn-speak { background: var(--speak-bg); padding: 5px 12px; font-size: 14px; border-radius: 20px; flex-shrink: 0; min-width: 120px; text-align: center;}
-        .btn-speak.playing { background: #e67e22; animation: pulse 1.5s infinite; }
-        .btn-success { background: var(--success); padding: 5px 12px; font-size: 14px; border-radius: 20px; border: none; color: white; cursor: pointer; transition: 0.3s; }
+        /* 小小的語音按鈕，設計更精緻 */
+        .btn-speak { background: #e8f8f5; border: 1px solid #1abc9c; color: #16a085; padding: 5px 15px; font-size: 14px; border-radius: 20px; flex-shrink: 0; text-align: center; box-shadow: none;}
+        .btn-speak:hover { background: #1abc9c; color: white; transform: none;}
+        .btn-speak.playing { background: #e67e22; color: white; border-color: #e67e22; animation: pulse 1.5s infinite; }
+        
+        .btn-success { background: var(--success); padding: 5px 12px; font-size: 14px; border-radius: 20px; border: none; color: white; cursor: pointer; transition: 0.3s; box-shadow: none;}
         .btn-success:hover { background: #1e8449; transform: scale(1.05); }
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(230, 126, 34, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(230, 126, 34, 0); } 100% { box-shadow: 0 0 0 0 rgba(230, 126, 34, 0); } }
         
-        .feedback { margin-top: 10px; font-weight: bold; display: none; padding: 10px; border-radius: 4px; }
+        .feedback { margin-top: 15px; font-weight: bold; display: none; padding: 15px; border-radius: 8px; }
         .feedback.show { display: block; }
-        .text-success { color: var(--success); background: #ebf7f0; }
-        .text-danger { color: var(--danger); background: #fdedec; }
-        .explanation { font-size: 0.9em; color: #555; margin-top: 5px; }
-        #score-display { font-size: 1.5em; font-weight: bold; text-align: center; color: var(--primary); margin: 20px 0; }
+        .text-success { color: var(--success); background: #ebf7f0; border-left: 5px solid var(--success);}
+        .text-danger { color: var(--danger); background: #fdedec; border-left: 5px solid var(--danger);}
+        .explanation { font-size: 0.95em; color: #555; margin-top: 8px; font-weight: normal;}
+        #score-display { font-size: 1.5em; font-weight: bold; text-align: center; color: var(--primary); margin: 30px 0; background: #ebf5fb; padding: 20px; border-radius: 10px;}
         
-        #mistake-list .mistake-item { border-left: 4px solid var(--danger); padding: 15px; background: #fff; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        #mistake-list .mistake-item { border-left: 5px solid var(--danger); padding: 20px; background: #fff; margin-bottom: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body>
@@ -84,10 +98,10 @@
             <option value="grade3_term2">三年級下學期 (自然)</option>
         </select>
         <select id="unit-select" onchange="loadCourse()">
-            <option value="unit1">第一單元：田園樂</option>
-            <option value="unit2">第二單元：溫度變化對物質的影響</option>
-            <option value="unit3">第三單元：我是動物解說員</option>
-            <option value="unit4">第四單元：天氣變變變</option>
+            <option value="unit1" selected>第一單元：田園樂 (內建 50 題)</option>
+            <option value="unit2">第二單元：溫度變化對物質的影響 (內建 10 題)</option>
+            <option value="unit3">第三單元：我是動物解說員 (內建 10 題)</option>
+            <option value="unit4">第四單元：天氣變變變 (內建 10 題)</option>
         </select>
     </div>
     <h1 id="course-title">載入中...</h1>
@@ -100,7 +114,11 @@
     </section>
 
     <section>
-        <h2 id="quiz-title">📝 單元總結隨堂挑戰</h2>
+        <div class="quiz-header-bar">
+            <div class="quiz-title-badge">🏆 隨堂大挑戰</div>
+            <div class="quiz-progress-badge" id="quiz-progress">目前進度：第 1 組</div>
+        </div>
+        
         <div id="quiz-container"></div>
         <div id="score-display"></div>
         <div class="btn-group">
@@ -231,6 +249,7 @@
                         `
                     }
                 ],
+                // 🔥 第一單元：完整 50 題題庫
                 "questions": [
                     // 第 1 組 (1-10)
                     { id: 101, q: "種菜的第一步通常是什麼？", options: ["播種", "鬆土", "施肥", "收成"], ans: 1, exp: "鬆土可以讓土壤變得鬆軟透氣，有利於發芽。" },
@@ -262,95 +281,85 @@
                     { id: 125, q: "「花椰菜」其實是植物的哪一個部位？", options: ["根", "莖", "花", "果實"], ans: 2, exp: "花椰菜是植物還沒有完全綻放的花苞集合體。" },
                     { id: 126, q: "澆水時如果水一直積在土面上流不下去，可能是什麼原因？", options: ["水太熱", "花盆底下沒有洞或土太硬", "太陽太大", "種子喝水太慢"], ans: 1, exp: "土壤如果硬化或盆底不排水，會造成積水，讓根部無法呼吸。" },
                     { id: 127, q: "觀察植物並寫下紀錄時，下列哪種做法是正確的？", options: ["想到再寫就好", "定時測量並寫下日期", "隨便猜一個數字寫", "只畫圖不寫字"], ans: 1, exp: "科學紀錄需要有規律、誠實且包含日期與數據。" },
-                    { id: 128, q: "為什麼農夫要幫農作物「除草」？", options: ["因為草很醜", "避免雜草搶走蔬菜的養分和水分", "為了讓蟲子沒地方住", "沒有特別原因"], ans: 1, exp: "雜草生命力強，會與蔬菜競爭土壤裡的養分與生存空間。" },
-                    { id: 129, q: "植物的「莖」主要有什麼功能？", options: ["在泥土裡吸水", "開出漂亮的花", "支撐植物並輸送水分、養分", "引誘蝴蝶"], ans: 2, exp: "莖就像植物的骨架和水管，負責支撐和運輸。" },
-                    { id: 130, q: "要種子順利發芽，泥土應該保持什麼狀態比較好？", options: ["完全乾燥", "泡在水裡", "微濕且鬆軟", "結冰"], ans: 2, exp: "微濕鬆軟的土壤能提供種子發芽需要的水分與空氣。" }
-                ]
-            },
-
-            // ==================== 第二單元 ====================
-            "unit2": {
-                "unitTitle": "第二單元：溫度變化對物質的影響",
-                "sections": [
-                    {
-                        "chapterTitle": "【2-1】 水的三態變化",
-                        "infographicHTML": `
-                            <div class="infographic">
-                                <h4 style="margin:0; color:#2c3e50;">💡 學習圖解：水的三態變化</h4>
-                                <div class="timeline">
-                                    <div class="timeline-step" style="border-color:#3498db;"><span class="emoji">🧊</span><span class="part">冰 (固態)</span></div>
-                                    <div class="timeline-arrow">♨️➔</div>
-                                    <div class="timeline-step" style="border-color:#2980b9;"><span class="emoji">💧</span><span class="part">水 (液態)</span></div>
-                                    <div class="timeline-arrow">♨️➔</div>
-                                    <div class="timeline-step" style="border-color:#bdc3c7;"><span class="emoji">☁️</span><span class="part">水蒸氣</span></div>
-                                </div>
-                            </div>
-                        `,
-                        "lessonHTML": `
-                            <h3>💧 百變水精靈</h3>
-                            <p>水會因為溫度的不同，出現三種完全不同的長相（三態）：</p>
-                            <ul>
-                                <li><span class="keyword">固態（冰）</span>：溫度降到 <strong>0°C</strong>時結冰。</li>
-                                <li><span class="keyword">液態（水）</span>：冰塊受熱變成水，叫做「融化」。</li>
-                                <li><span class="keyword">氣態（水蒸氣）</span>：加熱到 <strong>100°C</strong>沸騰，變成看不見的氣體。</li>
-                            </ul>
-                        `,
-                        "applicationText": `
-                            <h3>🤔 腦力激盪：小小思辨家</h3>
-                            <div class="think-box">
-                                <strong>情境：杯子流汗了？</strong><br>
-                                冰可樂倒進玻璃杯裡。過了一下子，玻璃杯外面出現好多小水滴！<br>
-                                <strong>👉 想一想：</strong>玻璃杯沒有破，水滴是哪來的？
-                            </div>
-                            <div class="hover-reveal">
-                                <div class="answer-text">
-                                    💡 解答：空氣中有看不見的「水蒸氣」。熱水蒸氣碰到冰冷的玻璃杯面時，就會「遇冷凝結」成小水滴。
-                                </div>
-                            </div>
-                        `
-                    }
-                ],
-                "questions": [
-                    // 第 1 組 (1-10)
-                    { id: 201, q: "冰塊放在室溫下會慢慢變成水，是因為發生了什麼事？", options: ["遇冷凝結", "受熱融化", "水分蒸發", "熱脹冷縮"], ans: 1, exp: "冰塊吸收了周圍空氣的熱量，所以從固態融化成液態。" },
-                    { id: 202, q: "水在溫度降到幾度時，會開始結成冰？", options: ["100°C", "50°C", "25°C", "0°C"], ans: 3, exp: "0°C 是水的冰點，低於這個溫度液態水就會凝固成固態的冰。" },
-                    { id: 203, q: "將一杯水放在太陽底下，幾天後水變少了，這是什麼現象？", options: ["凝固", "融化", "蒸發", "沸騰"], ans: 2, exp: "水在常溫下吸收熱量，慢慢變成氣態的水蒸氣散失到空氣中，這叫做蒸發。" },
-                    { id: 204, q: "空氣中的水蒸氣遇到冰冷的玻璃杯面，變成小水滴附著在上面，這叫做什麼？", options: ["凝固", "凝結", "融化", "沸騰"], ans: 1, exp: "氣態的水蒸氣遇冷變成液態的水，這個過程稱為凝結。" },
-                    { id: 205, q: "下列哪一種狀態的水是「氣態」的？", options: ["冰塊", "自來水", "水蒸氣", "冰水"], ans: 2, exp: "水蒸氣是水受熱後變成看不見的氣體狀態。" },
-                    { id: 206, q: "把水加熱到沸騰不斷冒泡時，溫度大約是幾度？", options: ["0°C", "50°C", "100°C", "200°C"], ans: 2, exp: "在一般氣壓下，水的沸點大約是 100°C。" },
-                    { id: 207, q: "下列哪一種物質的變化，冷卻後「無法」恢復原來的樣子（不可逆變化）？", options: ["冰塊融化成水", "巧克力受熱變軟", "生雞蛋煎成荷包蛋", "奶油受熱融化"], ans: 2, exp: "生雞蛋受熱煮熟後，蛋白質發生了改變，就算放進冰箱也無法變回生雞蛋。" },
-                    { id: 208, q: "將生米加水放入電鍋煮成熟飯，這是受到什麼因素影響產生的變化？", options: ["加水溶解", "受熱產生變化", "用力擠壓", "遇冷產生變化"], ans: 1, exp: "電鍋加熱產生的高溫，讓生米煮熟變成米飯，這是一種不可逆的熱變化。" },
-                    { id: 209, q: "鐵軌之間會預留縫隙，是為了防止夏天發生什麼現象而導致變形？", options: ["熱脹", "冷縮", "融化", "生鏽"], ans: 0, exp: "金屬受熱體積會變大（熱脹），預留縫隙才有空間讓它伸展而不互相擠壓變形。" },
-                    { id: 210, q: "哪一種情況是因為「外力」而改變了物體的形狀？", options: ["冰棒融化", "把紙揉成一團", "玉米變成爆米花", "糖溶在水裡"], ans: 1, exp: "用手捏、揉就是施加外力，改變了紙張原本平整的形狀。" },
-                    // 第 2 組 (11-20)
-                    { id: 211, q: "將一匙食鹽倒進水裡攪拌後看不見了，這是發生了什麼現象？", options: ["融化", "溶解", "蒸發", "凝結"], ans: 1, exp: "固體物質均勻混合在液體中看不見，科學上稱為溶解（融化是指受熱變液體喔！）。" },
-                    { id: 212, q: "打不開果醬的金屬瓶蓋時，用熱水沖一下就會比較好開，這是應用了什麼原理？", options: ["熱脹冷縮", "溶解", "蒸發", "凝固"], ans: 0, exp: "金屬蓋子受熱會稍微膨脹（變大一點點），所以就會變得比較鬆、好轉開。" },
-                    { id: 213, q: "關於水的三態，下列哪一個敘述是「錯誤」的？", options: ["冰是固態的水", "水蒸氣是看得見的白煙", "水在常溫下是液態", "冰受熱會融化成水"], ans: 1, exp: "水蒸氣是『看不見』的氣體！我們看到的熱水白煙，其實是水蒸氣遇冷凝結成的『小水滴』喔！" },
-                    { id: 214, q: "冬天說話時嘴巴會吐出「白煙」，這陣白煙其實是什麼？", options: ["二氧化碳氣體", "小冰塊", "微小的液態小水滴", "灰塵"], ans: 2, exp: "嘴巴呼出的熱水蒸氣，遇到外面冰冷的空氣，瞬間『凝結』成許多漂浮在空中的小水滴。" },
-                    { id: 215, q: "把巧克力放在手心一陣子會變得軟軟黏黏的，熱量是從哪裡來的？", options: ["太陽", "空氣", "手心的體溫", "巧克力自己發熱"], ans: 2, exp: "人體的體溫大約有36度，這股熱量傳遞給巧克力，讓它受熱融化了。" },
-                    { id: 216, q: "下列哪一個現象是「凝固」？", options: ["冰變成水", "水變成水蒸氣", "水放入冷凍庫變成冰", "水蒸氣變成水滴"], ans: 2, exp: "液態的水遇冷變成固態的冰，這個過程稱為凝固。" },
-                    { id: 217, q: "煮湯時，鍋蓋內側出現許多水滴，這是水經歷了哪些變化？", options: ["先蒸發，再凝結", "先融化，再凝結", "先凝結，再蒸發", "先沸騰，再融化"], ans: 0, exp: "湯裡的水受熱蒸發成水蒸氣，上升遇到較冷的鍋蓋後又凝結成水滴。" },
-                    { id: 218, q: "把黏土捏成各種動物形狀，這是利用什麼方法改變物質的形狀？", options: ["加熱", "冷卻", "施加外力", "泡水"], ans: 2, exp: "用手捏壓黏土就是一種施加外力的方式。" },
-                    { id: 219, q: "下列哪一種物質放進水裡攪拌後，『無法』發生溶解現象？", options: ["砂糖", "食鹽", "胡椒粉", "冰糖"], ans: 2, exp: "胡椒粉不溶於水，攪拌後還是會沉澱或浮在水面上。" },
-                    { id: 220, q: "把裝滿水的玻璃瓶放進冷凍庫，隔天發現玻璃瓶破裂了，這是因為水結冰後體積會怎樣？", options: ["變大", "變小", "不變", "消失"], ans: 0, exp: "水結成冰時體積會變大（膨脹），力量大到足以撐破玻璃瓶。" }
+                    { id: 128, q: "為什麼農夫要幫農作物「除草」？", options: ["因為草很醜", "避免雜草搶走蔬菜養分", "為了讓蟲子沒地方住", "沒有特別原因"], ans: 1, exp: "雜草生命力強，會與蔬菜競爭土壤裡的養分與生存空間。" },
+                    { id: 129, q: "植物的「莖」主要有什麼功能？", options: ["在泥土裡吸水", "開出漂亮的花", "支撐植物並輸送水分", "引誘蝴蝶"], ans: 2, exp: "莖就像植物的骨架和水管，負責支撐和運輸。" },
+                    { id: 130, q: "要種子順利發芽，泥土應該保持什麼狀態比較好？", options: ["完全乾燥", "泡在水裡", "微濕且鬆軟", "結冰"], ans: 2, exp: "微濕鬆軟的土壤能提供種子發芽需要的水分與空氣。" },
+                    // 第 4 組 (31-40)
+                    { id: 131, q: "「地瓜(番薯)」是我們常吃的食物，它是植物的哪一個部位？", options: ["根", "莖", "葉", "果實"], ans: 0, exp: "地瓜和胡蘿蔔一樣，都是膨大儲存養分的地下根（塊根）。" },
+                    { id: 132, q: "如果想要預防菜蟲把葉子吃光，最天然的方法是什麼？", options: ["噴很多農藥", "幫蔬菜套上網子(防蟲網)", "把葉子全部剪掉", "大聲嚇跑牠們"], ans: 1, exp: "使用網室或防蟲網可以阻擋蝴蝶飛進來產卵，是最安全天然的防蟲方式。" },
+                    { id: 133, q: "植物開花後，花朵凋謝的地方通常會長出什麼？", options: ["新的葉子", "更粗的樹幹", "果實和種子", "泥土"], ans: 2, exp: "花朵授粉凋謝後，子房會發育成保護種子的果實。" },
+                    { id: 134, q: "把植物放在窗台邊，過幾天後植物的莖會朝哪個方向生長？", options: ["往房間裡長", "往泥土裡鑽", "朝向窗外有陽光的地方", "原地打結"], ans: 2, exp: "植物具有向光性，會自然朝向有陽光的地方生長以利製造養分。" },
+                    { id: 135, q: "種子剛發芽時長出的第一對葉子，我們稱為什麼？", options: ["老葉", "子葉", "大葉", "真葉"], ans: 1, exp: "種子萌發最先長出的葉子叫做子葉，能提供初期短暫的養分。" },
+                    { id: 136, q: "下列哪一種蔬菜的食用部位跟其他人「不一樣」？", options: ["空心菜", "菠菜", "花椰菜", "青江菜"], ans: 2, exp: "空心菜、菠菜、青江菜都是吃葉子，只有花椰菜是吃花苞。" },
+                    { id: 137, q: "為什麼要在種菜前把泥土裡的石頭撿乾淨？", options: ["為了拿石頭去玩", "避免阻礙植物根部的生長", "石頭會把水吸乾", "石頭會咬植物"], ans: 1, exp: "石頭太堅硬會阻礙脆弱的根系往下伸展，也不利於排水。" },
+                    { id: 138, q: "如果蔬菜的葉子變得黃黃枯枯的，最可能是發生了什麼事？", options: ["吃太飽", "缺乏水分或養分", "剛洗過澡", "正在睡覺"], ans: 1, exp: "缺水、缺肥或是陽光不足，都會讓葉片無法正常維持綠色而發黃枯萎。" },
+                    { id: 139, q: "「絲瓜」和「小黃瓜」都是長在藤蔓上的，它們屬於植物的哪個部位？", options: ["根", "莖", "花", "果實"], ans: 3, exp: "絲瓜和小黃瓜都是開花後結出的果實。" },
+                    { id: 140, q: "我們吃的「洋蔥」一層一層的，它是植物的哪一個部位？", options: ["根", "莖", "葉", "果實"], ans: 2, exp: "洋蔥我們吃的地方其實是它變得肥厚、用來儲存養分的『鱗葉』喔！" },
+                    // 第 5 組 (41-50)
+                    { id: 141, q: "要測量一片菜葉的大小，除了用尺，還可以使用什麼方法？", options: ["用體重計量", "放在方格紙上描邊算格數", "用溫度計量", "用時鐘計時"], ans: 1, exp: "利用方格紙描邊並計算占了幾個方格，是測量不規則葉片面積的好方法。" },
+                    { id: 142, q: "澆水時，水應該澆在植物的哪裡最容易被吸收？", options: ["花朵上", "葉子的最頂端", "靠近根部的泥土上", "花盆的外面"], ans: 2, exp: "植物是靠泥土裡的根來喝水，所以水要澆在土上並讓它滲透下去。" },
+                    { id: 143, q: "剛播種完的種子，最適合放在什麼樣的環境中等待發芽？", options: ["放在冰箱裡", "放在烤箱旁", "放在通風陰涼、土壤微濕處", "泡在整桶水裡"], ans: 2, exp: "種子發芽需要適當的溫度、空氣和水分，但過熱、過冷或積水都會導致失敗。" },
+                    { id: 144, q: "「玉米」一粒一粒的黃色部分，其實是植物的什麼？", options: ["根", "種子", "葉", "花"], ans: 1, exp: "玉米粒就是玉米的種子，它可以長出新的玉米植株。" },
+                    { id: 145, q: "農夫在收成高麗菜時，通常會用到什麼工具？", options: ["剪刀或鐮刀", "鐵鎚", "螺絲起子", "水管"], ans: 0, exp: "收成大型葉菜類通常會使用刀具從靠近根部的地方切斷。" },
+                    { id: 146, q: "拔掉雜草後，雜草可以拿來做什麼最有意義？", options: ["丟在馬路上", "拿去燒掉製造黑煙", "集中起來發酵做成堆肥", "丟進水溝裡"], ans: 2, exp: "雜草腐爛後可以變成富含養分的有機堆肥，重新回歸大地滋養農作物。" },
+                    { id: 147, q: "種植時，在盆底鋪上一層小石頭或網子，主要目的是什麼？", options: ["讓植物有東西吃", "防止泥土流失並幫助排水", "增加盆子的重量", "為了美觀"], ans: 1, exp: "底部的網子或石頭可以讓多餘的水順利流出，同時擋住泥土不被水沖走。" },
+                    { id: 148, q: "我們常吃的「芹菜」，那一根長長脆脆的部位是什麼？", options: ["根", "莖(葉柄)", "花", "果實"], ans: 1, exp: "芹菜我們主要食用的部位是它發達的葉柄(莖部的一部分)。" },
+                    { id: 149, q: "下列哪一個行為是愛護植物的表現？", options: ["每天把葉子拔下來玩", "定期澆水並觀察生長", "在盆栽裡丟垃圾", "把植物放在黑暗衣櫃裡"], ans: 1, exp: "給予適當的照顧和紀錄，才是負責任的小農夫。" },
+                    { id: 150, q: "植物吸收泥土裡的養分和水分，主要是靠哪一個構造？", options: ["葉脈", "樹皮", "根毛", "花瓣"], ans: 2, exp: "根部上面有許多細細小小的根毛，能大大增加吸收水分的面積。" }
                 ]
             },
             
-            // ==================== 第三、四單元 (為避免過長，暫放 10 題) ====================
+            // ==================== 第二單元 ====================
+            "unit2": {
+                "unitTitle": "第二單元：溫度變化對物質的影響",
+                "sections": [],
+                "questions": [
+                    { id: 201, q: "冰塊放在室溫下會慢慢變成水，是因為發生了什麼事？", options: ["遇冷凝結", "受熱融化", "水分蒸發", "熱脹冷縮"], ans: 1, exp: "冰塊吸收了周圍空氣的熱量，所以從固態融化成液態。" },
+                    { id: 202, q: "水在溫度降到幾度時，會開始結成冰？", options: ["100°C", "50°C", "25°C", "0°C"], ans: 3, exp: "0°C 是水的冰點。" },
+                    { id: 203, q: "將一杯水放在太陽底下，幾天後水變少了，這是什麼現象？", options: ["凝固", "融化", "蒸發", "沸騰"], ans: 2, exp: "水吸收熱量變成氣態的水蒸氣散失到空氣中。" },
+                    { id: 204, q: "空氣中的水蒸氣遇到冰冷的玻璃杯面，變成小水滴附著在上面，這叫做什麼？", options: ["凝固", "凝結", "融化", "沸騰"], ans: 1, exp: "氣態的水蒸氣遇冷變成液態的水，這個過程稱為凝結。" },
+                    { id: 205, q: "下列哪一種狀態的水是「氣態」的？", options: ["冰塊", "自來水", "水蒸氣", "冰水"], ans: 2, exp: "水蒸氣是看不見的氣體狀態。" },
+                    { id: 206, q: "把水加熱到沸騰不斷冒泡時，溫度大約是幾度？", options: ["0°C", "50°C", "100°C", "200°C"], ans: 2, exp: "水的沸點大約是 100°C。" },
+                    { id: 207, q: "下列哪一種物質的變化，冷卻後無法恢復原狀（不可逆變化）？", options: ["冰塊變水", "巧克力變軟", "生雞蛋煎成荷包蛋", "奶油融化"], ans: 2, exp: "生雞蛋受熱煮熟後蛋白質改變，無法變回生雞蛋。" },
+                    { id: 208, q: "將生米加水放入電鍋煮成熟飯，這是受到什麼因素影響？", options: ["加水溶解", "受熱產生變化", "用力擠壓", "遇冷"], ans: 1, exp: "電鍋加熱的高溫讓生米煮熟，是熱變化。" },
+                    { id: 209, q: "鐵軌之間預留縫隙，是為了防止夏天發生什麼現象？", options: ["熱脹", "冷縮", "融化", "生鏽"], ans: 0, exp: "金屬受熱體積會變大（熱脹）。" },
+                    { id: 210, q: "打不開金屬瓶蓋時，用熱水沖一下就會比較好開，這是應用了什麼原理？", options: ["熱脹冷縮", "溶解", "蒸發", "凝固"], ans: 0, exp: "金屬蓋子受熱會膨脹變大，變得比較鬆。" }
+                ]
+            },
+            
+            // ==================== 第三單元 ====================
             "unit3": {
                 "unitTitle": "第三單元：我是動物解說員",
                 "sections": [],
                 "questions": [
-                    { id: 301, q: "鳥類能飛翔在天空中，主要是因為牠們具有哪一種構造？", options: ["蹼", "鰓", "翅膀和羽毛", "堅硬的外殼"], ans: 2, exp: "鳥類的翅膀和羽毛能提供升力，讓牠們在空中飛行。" },
-                    { id: 302, q: "青蛙的腳趾之間有「蹼」，這個構造主要的功能是什麼？", options: ["方便跳躍", "幫助在水中游泳", "用來抓住獵物", "保暖"], ans: 1, exp: "蹼就像人類潛水時穿的蛙鞋，能增加推水面積，幫助游泳。" }
+                    { id: 301, q: "鳥類能飛翔在天空中，主要是因為牠們具有哪一種構造？", options: ["蹼", "鰓", "翅膀和羽毛", "堅硬的外殼"], ans: 2, exp: "鳥類的翅膀和羽毛能提供升力。" },
+                    { id: 302, q: "青蛙的腳趾之間有「蹼」，這個構造主要的功能是什麼？", options: ["方便跳躍", "幫助在水中游泳", "抓住獵物", "保暖"], ans: 1, exp: "蹼能增加推水面積，幫助游泳。" },
+                    { id: 303, q: "下列哪一種動物的身體構造，是呈現流線型，最適合在水中活動？", options: ["兔子", "老鷹", "海豚", "長頸鹿"], ans: 2, exp: "海豚具有流線型身體，能減少水中阻力。" },
+                    { id: 304, q: "駱駝被稱為「沙漠之舟」，牠背上的駝峰主要儲存了什麼？", options: ["水分", "血液", "空氣", "脂肪"], ans: 3, exp: "駝峰裡儲存的是脂肪，可分解成能量和水分。" },
+                    { id: 305, q: "竹節蟲長得像樹枝，這種生存法寶稱為什麼？", options: ["裝死", "保護色/擬態", "硬殼", "毒液"], ans: 1, exp: "長得像周圍環境隱藏自己，稱為保護色或擬態。" },
+                    { id: 306, q: "當烏龜遇到危險時，牠會採取哪一種防禦方法？", options: ["噴出毒液", "用後腿踢", "縮進硬殼中", "變色隱藏"], ans: 2, exp: "烏龜的硬殼是牠們最堅固的防禦裝甲。" },
+                    { id: 307, q: "臭鼬遇到敵人威脅時，會使用什麼特殊的生存法寶？", options: ["豎起尖刺", "放出惡臭氣體", "裝死", "快速飛走"], ans: 1, exp: "會噴出極度惡臭的液體讓敵人逃跑。" },
+                    { id: 308, q: "為什麼有些青蛙身體顏色非常鮮豔亮麗？", options: ["為了吸引人類", "代表我有毒的警告色", "為了反射陽光", "喜歡漂亮"], ans: 1, exp: "鮮豔顏色通常是警告色，表示有毒。" },
+                    { id: 309, q: "魚類能在水中呼吸，是因為牠們具有哪一種構造？", options: ["肺臟", "皮膚", "鰓", "氣孔"], ans: 2, exp: "魚類利用鰓過濾水中的氧氣。" },
+                    { id: 310, q: "河豚遇到危險會把身體脹大，這有什麼防禦效果？", options: ["游得更快", "讓敵人難以吞咽", "發出大聲音", "放出毒氣"], ans: 1, exp: "脹大且充滿刺的身體會讓掠食者的嘴巴無法吞下。" }
                 ]
             },
+            
+            // ==================== 第四單元 ====================
             "unit4": {
                 "unitTitle": "第四單元：天氣變變變",
                 "sections": [],
                 "questions": [
-                    { id: 401, q: "下列哪一種天氣狀況，最適合把家裡的厚棉被拿出來曬？", options: ["陰天", "晴天", "下雨天", "颱風天"], ans: 1, exp: "晴天有強烈的陽光和高溫，可以讓棉被快速乾燥並殺菌。" },
-                    { id: 402, q: "讀取氣溫計的溫度時，眼睛應該怎麼看才準確？", options: ["從上往下看", "從下往上看", "和紅色液柱的頂端平視", "閉著眼睛看"], ans: 2, exp: "平視才能準確對齊刻度，仰視或俯視都會造成視覺誤差。" }
+                    { id: 401, q: "下列哪一種天氣狀況，最適合把家裡的厚棉被拿出來曬？", options: ["陰天", "晴天", "下雨天", "颱風天"], ans: 1, exp: "晴天有強烈的陽光和高溫，可以讓棉被快速乾燥。" },
+                    { id: 402, q: "讀取氣溫計的溫度時，眼睛應該怎麼看才準確？", options: ["從上往下看", "從下往上看", "和紅色液柱頂端平視", "閉眼看"], ans: 2, exp: "平視才能準確對齊刻度。" },
+                    { id: 403, q: "測量雨量時，應該選擇什麼形狀的容器最適合？", options: ["平底直筒杯", "上寬下窄的碗", "下寬上窄的瓶子", "隨便杯子"], ans: 0, exp: "平底直筒的杯子能真實反映降雨量。" },
+                    { id: 404, q: "應該把雨量器放在哪裡比較好？", options: ["大樹底下", "屋簷底下", "空曠沒有遮蔽物的地方", "客廳桌上"], ans: 2, exp: "放在空曠處才能收集到真實從天空落下的雨水。" },
+                    { id: 405, q: "氣象預報顯示「降雨機率 90%」，代表什麼意思？", options: ["下 90 分鐘的雨", "有九成機會會下雨", "90% 地方會下雨", "雨量 90 毫米"], ans: 1, exp: "降雨機率是指下雨的機會大小。" },
+                    { id: 406, q: "如果天空被雲完全遮住了，幾乎看不到藍天，這天氣稱為什麼？", options: ["晴天", "多雲", "陰天", "颱風"], ans: 2, exp: "雲量占據天空絕大部分，稱為陰天。" },
+                    { id: 407, q: "測量氣溫時，氣溫計應該放在哪裡最準確？", options: ["太陽直射處", "通風且有遮蔽的陰涼處", "冰箱裡", "冷氣出風口"], ans: 1, exp: "太陽直射會讓氣溫計吸熱變熱，導致測出來溫度太高。" },
+                    { id: 408, q: "天氣預報氣溫「20°C ~ 25°C」，其中的 20°C 是指什麼？", options: ["平均氣溫", "最高氣溫", "最低氣溫", "晚上氣溫"], ans: 2, exp: "前面的較小數字代表預測的最低氣溫。" },
+                    { id: 409, q: "台灣測量氣溫的單位通常是使用哪一種？", options: ["毫米 (mm)", "公斤 (kg)", "攝氏度 (°C)", "公分 (cm)"], ans: 2, exp: "台灣氣溫使用攝氏度 (°C)。" },
+                    { id: 410, q: "連續好幾個月都不下雨，會造成什麼嚴重的問題？", options: ["水災", "寒害", "旱災(缺水)", "地震"], ans: 2, exp: "長期不下雨會引發旱災，影響生活和農業用水。" }
                 ]
             }
         }
@@ -360,15 +369,12 @@
     let currentGrade = "grade3_term2";
     let currentUnit = "unit1"; 
     let userMistakes = [];
-    
-    // 【新增】：題組分頁變數
     let currentQuizSetIndex = 0;
     const QUESTIONS_PER_SET = 10;
 
     function loadCourse() {
         currentGrade = document.getElementById('grade-select').value;
         currentUnit = document.getElementById('unit-select').value;
-
         const unitData = knowledgeBase[currentGrade][currentUnit];
         if(!unitData) return;
 
@@ -389,13 +395,9 @@
                             <span>📌 ${sec.chapterTitle}</span>
                             <button class="btn-speak" onclick="toggleSpeak('lesson_${index}', this)">🔊 唸課文給我聽</button>
                         </div>
-                        ${sec.infographicHTML}
-                        <div class="lesson-content">
-                            ${sec.lessonHTML}
-                        </div>
-                        <div class="life-app">
-                            ${sec.applicationText}
-                        </div>
+                        ${sec.infographicHTML || ''}
+                        <div class="lesson-content">${sec.lessonHTML}</div>
+                        <div class="life-app">${sec.applicationText}</div>
                     </div>
                 `;
             });
@@ -403,25 +405,23 @@
 
         userMistakes = JSON.parse(localStorage.getItem(`scienceMistakes_${currentGrade}_${currentUnit}`)) || [];
         currentQuestions = [...(unitData.questions || [])];
-        currentQuizSetIndex = 0; // 切換單元時，重置為第一組
+        currentQuizSetIndex = 0; 
         renderQuiz();
         renderMistakes();
     }
 
-    // 【大幅修改】：加入分組切換邏輯
     function renderQuiz() {
         const container = document.getElementById('quiz-container');
         container.innerHTML = '';
         document.getElementById('score-display').innerText = '';
 
-        // 計算目前這組要抓取哪幾題 (例如第一組: 0~9，第二組: 10~19)
         const startIndex = currentQuizSetIndex * QUESTIONS_PER_SET;
         const endIndex = startIndex + QUESTIONS_PER_SET;
         const questionsToShow = currentQuestions.slice(startIndex, endIndex);
 
-        // 動態更新標題，顯示目前是第幾組
         const totalSets = Math.ceil(currentQuestions.length / QUESTIONS_PER_SET) || 1;
-        document.getElementById('quiz-title').innerText = `📝 單元總結隨堂挑戰 (第 ${currentQuizSetIndex + 1} 組 / 共 ${totalSets} 組)`;
+        // 🔥 更新網格 UI 的頭部進度標籤
+        document.getElementById('quiz-progress').innerText = `目前進度：第 ${currentQuizSetIndex + 1} 組 / 共 ${totalSets} 組`;
 
         if(questionsToShow.length === 0) {
             container.innerHTML = "<p>本單元考題尚在建置中...</p>";
@@ -429,12 +429,13 @@
         }
 
         questionsToShow.forEach((q, i) => {
-            const globalIndex = startIndex + i; // 確保 name 屬性不會重複
+            const globalIndex = startIndex + i; 
             
+            // 🔥 選項改為網格排列
             let optionsHtml = q.options.map((opt, optIndex) => `
                 <label>
                     <input type="radio" name="q${globalIndex}" value="${optIndex}">
-                    ${optIndex + 1}. ${opt}
+                    <strong>${optIndex + 1}.</strong> ${opt}
                 </label>
             `).join('');
 
@@ -443,10 +444,10 @@
             container.innerHTML += `
                 <div class="question-card" id="card-${globalIndex}">
                     <div class="question-title">
-                        <span>${i + 1}. ${q.q}</span>
+                        <div><span class="q-number">Q${i + 1}:</span> ${q.q}</div>
                         <button class="btn-speak" onclick="toggleSpeak('q_${globalIndex}', this)">🔊 唸題目</button>
                     </div>
-                    <div class="options">${optionsHtml}</div>
+                    <div class="options-grid">${optionsHtml}</div>
                     <div class="feedback" id="feedback-${globalIndex}"></div>
                 </div>
             `;
@@ -457,7 +458,6 @@
         const startIndex = currentQuizSetIndex * QUESTIONS_PER_SET;
         const endIndex = startIndex + QUESTIONS_PER_SET;
         const questionsToShow = currentQuestions.slice(startIndex, endIndex);
-        
         if (questionsToShow.length === 0) return;
 
         let correctCount = 0;
@@ -475,7 +475,6 @@
             }
 
             const isCorrect = parseInt(selected.value) === q.ans;
-            
             if (isCorrect) {
                 correctCount++;
                 feedbackEl.innerHTML = `✅ 答對了！<div class='explanation'>${q.exp}</div>`;
@@ -484,7 +483,6 @@
                 feedbackEl.innerHTML = `❌ 答錯了。正確答案是：${q.ans + 1}。
                                         <div class='explanation'>💡 說明：${q.exp}</div>`;
                 feedbackEl.className = "feedback show text-danger";
-                
                 if (!userMistakes.some(m => m.id === q.id)) newMistakes.push(q);
             }
         });
@@ -497,45 +495,40 @@
             localStorage.setItem(`scienceMistakes_${currentGrade}_${currentUnit}`, JSON.stringify(userMistakes));
             renderMistakes();
         }
-        
         document.getElementById('score-display').scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
-    // 【新增】：切換下一組題目的函數
     function nextQuizSet() {
         const totalSets = Math.ceil(currentQuestions.length / QUESTIONS_PER_SET);
-        if(totalSets <= 1) {
-            alert("本單元目前只有一組題目喔！");
-            return;
-        }
+        if(totalSets <= 1) { alert("本單元目前只有一組題目喔！"); return; }
         
         if(confirm("確定要切換到下一組題目嗎？這會清除您目前的作答畫面喔！")) {
-            currentQuizSetIndex = (currentQuizSetIndex + 1) % totalSets; // 循環邏輯：1->2->3->1...
+            currentQuizSetIndex = (currentQuizSetIndex + 1) % totalSets; 
             renderQuiz();
-            document.getElementById('quiz-title').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // 捲動回測驗區頭部
+            document.querySelector('.quiz-header-bar').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     }
 
     function renderMistakes() {
         const container = document.getElementById('mistake-list');
         if (userMistakes.length === 0) {
-            container.innerHTML = "<p style='color:green;'>太棒了！目前沒有錯題紀錄喔！</p>";
+            container.innerHTML = "<p style='color:#27ae60; font-weight:bold;'>太棒了！目前沒有錯題紀錄喔！</p>";
             return;
         }
 
         container.innerHTML = userMistakes.map((q, index) => {
             window.speakData[`mistake_${index}`] = `題目：${q.q}。正確答案是：${q.ans + 1}。說明：${q.exp}`;
-            
             return `
             <div class="mistake-item">
                 <div style="font-weight:bold; display:flex; justify-content:space-between; flex-wrap: wrap; gap: 10px;">
-                    <span>Q: ${q.q}</span>
+                    <span style="color:#2c3e50;"><span class="q-number">Q:</span> ${q.q}</span>
                     <div style="display: flex; gap: 5px;">
                         <button class="btn-speak" style="padding: 2px 8px;" onclick="toggleSpeak('mistake_${index}', this)">🔊 唸這題</button>
                         <button class="btn-success" onclick="removeMistake(${q.id})">✅ 我已經學會了</button>
                     </div>
                 </div>
-                <div style="color:var(--danger); margin-top:5px;">👉 正確答案：${q.ans + 1}. ${q.options[q.ans]}</div>
+                <div style="color:var(--danger); margin-top:10px; font-weight:bold;">👉 正確答案：${q.ans + 1}. ${q.options[q.ans]}</div>
                 <div class="explanation">💡 說明：${q.exp}</div>
             </div>
             `;
